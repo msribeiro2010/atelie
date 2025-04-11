@@ -714,66 +714,83 @@
     </div>
 
     <script>
+        // Galeria de imagens padrão
+        const defaultGalleryItems = [
+            {
+                image: 'images/gallery/foto1.jpg',
+                title: 'Ajustes Personalizados',
+                description: 'Transformamos suas peças com perfeição',
+                category: 'new'
+            },
+            {
+                image: 'images/gallery/foto2.jpg',
+                title: 'Reparos Especializados',
+                description: 'Cuidado e atenção em cada detalhe',
+                category: 'new'
+            },
+            {
+                image: 'images/gallery/foto3.jpg',
+                title: 'Customização',
+                description: 'Seu estilo, nossa expertise',
+                category: 'novelty'
+            }
+            // Adicione mais imagens conforme necessário
+        ];
+
         // Load gallery items
         function loadGalleryItems() {
-            const galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
             const grid = document.getElementById('galleryGrid');
+            let galleryItems;
             
-            if (galleryItems.length === 0) {
-                grid.innerHTML = `
-                    <div class="gallery-item new" data-category="new">
-                        <img src="atelie.jpg" 
-                             alt="Exemplo de trabalho" 
-                             class="w-full h-[400px] object-cover cursor-pointer"
-                             onclick="openImageModal(this, 0)">
-                        <div class="overlay">
-                            <button class="edit-button" onclick="openEditForm(this, event)">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <h3 class="font-bold text-white text-xl mb-2">Nosso Trabalho</h3>
-                            <p class="text-gray-200 mb-4">Qualidade e dedicação em cada detalhe</p>
-                            <span class="inline-block bg-emerald-500/50 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm">
-                                Exemplo
-                            </span>
-                        </div>
-                        <div class="edit-form">
-                            <input type="text" placeholder="Título da imagem" value="Nosso Trabalho">
-                            <textarea placeholder="Descrição da imagem">Qualidade e dedicação em cada detalhe</textarea>
-                            <div class="buttons">
-                                <button class="save" onclick="saveEdit(this, event)">Salvar</button>
-                                <button class="cancel" onclick="cancelEdit(this, event)">Cancelar</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else {
-                grid.innerHTML = galleryItems.map((item, index) => `
-                    <div class="gallery-item ${item.category}" data-category="${item.category}">
-                        <img src="${item.image}" 
-                             alt="${item.title}" 
-                             class="w-full h-[400px] object-cover cursor-pointer"
-                             onclick="openImageModal(this, ${index})">
-                        <div class="overlay">
-                            <button class="edit-button" onclick="openEditForm(this, event)">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <h3 class="font-bold text-white text-xl mb-2">${item.title}</h3>
-                            <p class="text-gray-200 mb-4">${item.description}</p>
-                            <span class="inline-block bg-emerald-500/50 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm">
-                                ${item.category === 'new' ? 'Lançamento' : 'Novidade'}
-                            </span>
-                        </div>
-                        <div class="edit-form">
-                            <input type="text" placeholder="Título da imagem" value="${item.title}">
-                            <textarea placeholder="Descrição da imagem">${item.description}</textarea>
-                            <div class="buttons">
-                                <button class="save" onclick="saveEdit(this, event)">Salvar</button>
-                                <button class="cancel" onclick="cancelEdit(this, event)">Cancelar</button>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
+            try {
+                // Tenta carregar do localStorage
+                const savedItems = localStorage.getItem('galleryItems');
+                galleryItems = savedItems ? JSON.parse(savedItems) : defaultGalleryItems;
+                
+                // Verifica se as imagens existem
+                galleryItems = galleryItems.filter(item => {
+                    const img = new Image();
+                    img.src = item.image;
+                    return img.complete || (img.width + img.height) > 0;
+                });
+
+                // Se não houver imagens válidas, usa as padrão
+                if (galleryItems.length === 0) {
+                    galleryItems = defaultGalleryItems;
+                }
+            } catch (e) {
+                console.warn('Erro ao carregar galeria:', e);
+                galleryItems = defaultGalleryItems;
             }
+
+            // Renderiza a galeria
+            grid.innerHTML = galleryItems.map((item, index) => `
+                <div class="gallery-item ${item.category}" data-category="${item.category}">
+                    <img src="${item.image}" 
+                         alt="${item.title}" 
+                         class="w-full h-[400px] object-cover cursor-pointer"
+                         onerror="this.src='images/placeholder.jpg'"
+                         onclick="openImageModal(this, ${index})">
+                    <div class="overlay">
+                        <button class="edit-button" onclick="openEditForm(this, event)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <h3 class="font-bold text-white text-xl mb-2">${item.title}</h3>
+                        <p class="text-gray-200 mb-4">${item.description}</p>
+                        <span class="inline-block bg-emerald-500/50 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm">
+                            ${item.category === 'new' ? 'Lançamento' : 'Novidade'}
+                        </span>
+                    </div>
+                    <div class="edit-form">
+                        <input type="text" placeholder="Título da imagem" value="${item.title}">
+                        <textarea placeholder="Descrição da imagem">${item.description}</textarea>
+                        <div class="buttons">
+                            <button class="save" onclick="saveEdit(this, event)">Salvar</button>
+                            <button class="cancel" onclick="cancelEdit(this, event)">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
         // Gallery Filter Function
@@ -1064,19 +1081,32 @@
             const editForm = galleryItem.querySelector('.edit-form');
             const title = editForm.querySelector('input').value;
             const description = editForm.querySelector('textarea').value;
+            const image = galleryItem.querySelector('img').src;
+            const category = galleryItem.dataset.category;
             
             // Atualizar o overlay
             const overlay = galleryItem.querySelector('.overlay');
             overlay.querySelector('h3').textContent = title;
             overlay.querySelector('p').textContent = description;
             
-            // Atualizar o localStorage
-            const galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
-            const index = Array.from(galleryItem.parentNode.children).indexOf(galleryItem);
-            if (galleryItems[index]) {
+            try {
+                // Atualizar o localStorage
+                let galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
+                const index = Array.from(galleryItem.parentNode.children).indexOf(galleryItem);
+                
+                // Se não existir item, cria um novo
+                if (!galleryItems[index]) {
+                    galleryItems[index] = {
+                        image: image,
+                        category: category
+                    };
+                }
+                
                 galleryItems[index].title = title;
                 galleryItems[index].description = description;
                 localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
+            } catch (e) {
+                console.warn('Erro ao salvar alterações:', e);
             }
             
             // Fechar o formulário
