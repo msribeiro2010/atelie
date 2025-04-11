@@ -6,7 +6,11 @@
     <title>Rosa Costuras - Ateliê de Costura Criativa</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        .font-poppins { font-family: 'Poppins', sans-serif; }
+        
         .gallery-item {
             transition: all 0.3s ease;
         }
@@ -23,22 +27,41 @@
             -webkit-backdrop-filter: blur(5px);
             backdrop-filter: blur(5px);
         }
+        
+        .gradient-border {
+            position: relative;
+            border-radius: 0.5rem;
+            background: linear-gradient(45deg, #fecdd3, #fb7185, #e11d48);
+            padding: 2px;
+        }
+        
+        .gradient-border > div {
+            background: white;
+            border-radius: 0.4rem;
+        }
+
+        .modern-shadow {
+            box-shadow: 0 10px 30px -5px rgba(251, 113, 133, 0.2);
+        }
     </style>
 </head>
-<body class="bg-rose-50 font-sans">
+<body class="bg-rose-50 font-poppins">
     <!-- Header -->
-    <header class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center">
-                <i class="fas fa-scissors text-3xl text-rose-500 mr-3"></i>
-                <h1 class="text-2xl font-bold text-rose-800">Rosa Costuras</h1>
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <img src="atelierosa.png" alt="Rosa Costuras Logo" class="h-16 rounded-lg">
+                <div>
+                    <h1 class="text-3xl font-playfair font-bold text-rose-800">Rosa Costuras</h1>
+                    <p class="text-sm text-rose-600 tracking-wide">ATELIÊ DE COSTURA CRIATIVA</p>
+                </div>
             </div>
             <nav class="hidden md:flex space-x-8">
-                <a href="#home" class="text-rose-700 hover:text-rose-500 font-medium">Início</a>
-                <a href="#gallery" class="text-rose-700 hover:text-rose-500 font-medium">Galeria</a>
-                <a href="#services" class="text-rose-700 hover:text-rose-500 font-medium">Serviços</a>
-                <a href="#repairs" class="text-rose-700 hover:text-rose-500 font-medium">Reparos</a>
-                <a href="#contact" class="text-rose-700 hover:text-rose-500 font-medium">Contato</a>
+                <a href="#home" class="text-rose-700 hover:text-rose-500 font-medium transition-colors duration-200">Início</a>
+                <a href="#gallery" class="text-rose-700 hover:text-rose-500 font-medium transition-colors duration-200">Galeria</a>
+                <a href="#services" class="text-rose-700 hover:text-rose-500 font-medium transition-colors duration-200">Serviços</a>
+
+                <a href="#contact" class="text-rose-700 hover:text-rose-500 font-medium transition-colors duration-200">Contato</a>
             </nav>
             <button class="md:hidden text-rose-700" title="Abrir Menu">
                 <i class="fas fa-bars text-2xl"></i>
@@ -47,238 +70,347 @@
     </header>
 
     <!-- Hero Section -->
-    <section id="home" class="bg-gradient-to-r from-rose-100 to-pink-100 py-16">
-        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
-            <div class="md:w-1/2 mb-8 md:mb-0">
-                <h2 class="text-4xl md:text-5xl font-bold text-rose-800 mb-4">Costuras feitas com amor e dedicação</h2>
-                <p class="text-lg text-rose-700 mb-6">No ateliê Rosa Costuras, cada peça é única e feita especialmente para você.</p>
-                <a href="#gallery" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 px-6 rounded-full transition duration-300 inline-flex items-center">
-                    Ver Nossos Trabalhos <i class="fas fa-arrow-down ml-2"></i>
-                </a>
-            </div>
-            <div class="md:w-1/2 flex justify-center">
-                <img src="atelierosa.png" 
-                     alt="Ateliê de costura com máquina de costura vintage e tecidos elegantes" 
-                     class="rounded-lg shadow-xl w-full max-w-md object-cover">
+    <section id="home" class="relative py-20 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-rose-100 to-pink-100 opacity-50"></div>
+        <div class="container mx-auto px-6 relative">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2">
+                    <h2 class="text-4xl md:text-5xl font-playfair font-bold text-rose-800 mb-6 leading-tight">
+                        Transformando Peças em Memórias Especiais
+                    </h2>
+                    <p class="text-lg text-rose-700 mb-8 leading-relaxed">
+                        No ateliê Rosa Costuras, cada peça é única e recebe um cuidado especial. 
+                        Trazemos vida nova às suas roupas favoritas com expertise e dedicação.
+                    </p>
+                    <a href="#gallery" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-rose-500 to-rose-600 text-white font-semibold rounded-full hover:from-rose-600 hover:to-rose-700 transition-all duration-300 shadow-lg hover:shadow-xl">
+                        Conheça Nosso Trabalho
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    <div class="gradient-border">
+                        <div class="p-2">
+                            <img src="atelierosa.png" 
+                                alt="Ateliê de costura com máquina de costura vintage e tecidos elegantes" 
+                                class="rounded-lg w-full max-w-md object-cover modern-shadow">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Gallery Section with Categories -->
-    <section id="gallery" class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center text-rose-800 mb-12">Nossos Trabalhos</h2>
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-playfair font-bold text-rose-800 mb-4">Nossos Serviços</h2>
+                <p class="text-rose-600 max-w-2xl mx-auto">Oferecemos soluções personalizadas para todas as suas necessidades de costura</p>
+            </div>
             
-            <!-- Category Buttons -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="gradient-border">
+                    <div class="p-8 h-full">
+                        <div class="text-rose-500 text-4xl mb-6">
+                            <i class="fas fa-tshirt"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-rose-800 mb-4">Ajustes Sob Medida</h3>
+                        <p class="text-rose-700 leading-relaxed">Adaptamos suas peças para um caimento perfeito, respeitando seu estilo e conforto.</p>
+                    </div>
+                </div>
+                
+                <div class="gradient-border">
+                    <div class="p-8 h-full">
+                        <div class="text-rose-500 text-4xl mb-6">
+                            <i class="fas fa-redo"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-rose-800 mb-4">Reparos Especializados</h3>
+                        <p class="text-rose-700 leading-relaxed">Consertamos e restauramos suas peças favoritas com técnicas profissionais.</p>
+                    </div>
+                </div>
+                
+                <div class="gradient-border">
+                    <div class="p-8 h-full">
+                        <div class="text-rose-500 text-4xl mb-6">
+                            <i class="fas fa-magic"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-rose-800 mb-4">Customização</h3>
+                        <p class="text-rose-700 leading-relaxed">Transformamos suas ideias em realidade com detalhes únicos e acabamento impecável.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quote Request Section -->
+    <section id="quote" class="py-20 bg-rose-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-playfair font-bold text-rose-800 mb-4">Solicite um Orçamento</h2>
+                <p class="text-rose-600 max-w-2xl mx-auto">Descreva seu projeto e entraremos em contato com um orçamento personalizado</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <div class="gradient-border">
+                    <div class="bg-white p-8 rounded-lg">
+                        <form id="quoteForm" class="space-y-8">
+                            <!-- Tipo de Serviço -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-rose-800 font-medium mb-2">Tipo de Serviço</label>
+                                    <div class="space-y-2">
+                                        <label class="flex items-center space-x-3">
+                                            <input type="radio" name="serviceType" value="repair" class="text-rose-600 focus:ring-rose-500" required>
+                                            <span class="text-rose-700">Reparos e Ajustes</span>
+                                        </label>
+                                        <label class="flex items-center space-x-3">
+                                            <input type="radio" name="serviceType" value="custom" class="text-rose-600 focus:ring-rose-500">
+                                            <span class="text-rose-700">Confecção Personalizada</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Tipo de Reparo (aparece apenas quando "Reparos" é selecionado) -->
+                                <div id="repairTypes" class="hidden">
+                                    <label class="block text-rose-800 font-medium mb-2">Tipo de Reparo</label>
+                                    <select name="repairType" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
+                                        <option value="">Selecione o tipo de reparo...</option>
+                                        <option value="bainha">Ajuste de Bainha</option>
+                                        <option value="zipper">Troca de Zíper</option>
+                                        <option value="waist">Ajuste de Cintura</option>
+                                        <option value="buttons">Troca de Botões</option>
+                                        <option value="other">Outro Reparo</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Descrição do Serviço -->
+                            <div>
+                                <label for="description" class="block text-rose-800 font-medium mb-2">Descreva o que você precisa</label>
+                                <textarea id="description" name="description" rows="4" 
+                                    class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
+                                    placeholder="Descreva em detalhes o serviço que você precisa..." required></textarea>
+                            </div>
+
+                            <!-- Upload de Imagens -->
+                            <div>
+                                <label class="block text-rose-800 font-medium mb-2">Fotos de Referência</label>
+                                <div class="border-2 border-dashed border-rose-200 rounded-lg p-6 text-center" id="dropZone">
+                                    <input type="file" id="imageUpload" multiple accept="image/*" class="hidden">
+                                    <label for="imageUpload" class="cursor-pointer">
+                                        <i class="fas fa-cloud-upload-alt text-4xl text-rose-400 mb-4"></i>
+                                        <p class="text-rose-600">Arraste suas fotos aqui ou clique para selecionar</p>
+                                        <p class="text-sm text-rose-400 mt-2">Aceita múltiplas imagens (PNG, JPG)</p>
+                                    </label>
+                                </div>
+                                <!-- Preview das imagens -->
+                                <div id="imagePreview" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4"></div>
+                            </div>
+
+                            <!-- Medidas (opcional) -->
+                            <div id="measurementsSection" class="hidden">
+                                <label class="block text-rose-800 font-medium mb-2">Medidas (opcional)</label>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-rose-600 text-sm mb-1">Busto/Tórax (cm)</label>
+                                        <input type="number" name="bust" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-rose-600 text-sm mb-1">Cintura (cm)</label>
+                                        <input type="number" name="waist" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-rose-600 text-sm mb-1">Quadril (cm)</label>
+                                        <input type="number" name="hip" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dados de Contato -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="name" class="block text-rose-800 font-medium mb-2">Nome Completo *</label>
+                                    <input type="text" id="name" name="name" 
+                                        class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500" required>
+                                </div>
+                                <div>
+                                    <label for="phone" class="block text-rose-800 font-medium mb-2">Telefone *</label>
+                                    <input type="tel" id="phone" name="phone" 
+                                        class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500" required>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="email" class="block text-rose-800 font-medium mb-2">E-mail *</label>
+                                <input type="email" id="email" name="email" 
+                                    class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500" required>
+                            </div>
+
+                            <!-- Comentários Adicionais -->
+                            <div>
+                                <label for="comments" class="block text-rose-800 font-medium mb-2">Comentários Adicionais</label>
+                                <textarea id="comments" name="comments" rows="3" 
+                                    class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
+                                    placeholder="Informações adicionais importantes sobre seu pedido..."></textarea>
+                            </div>
+
+                            <!-- Botão de Envio -->
+                            <div class="flex justify-center">
+                                <button type="submit" 
+                                    class="px-8 py-4 bg-gradient-to-r from-rose-500 to-rose-600 text-white font-semibold rounded-full hover:from-rose-600 hover:to-rose-700 transition-all duration-300 shadow-lg hover:shadow-xl">
+                                    Enviar Solicitação de Orçamento
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmação -->
+        <div id="confirmationModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
+                <i class="fas fa-check-circle text-6xl text-green-500 mb-4"></i>
+                <h3 class="text-2xl font-bold text-rose-800 mb-4">Solicitação Enviada!</h3>
+                <p class="text-rose-600 mb-6">
+                    Obrigado pelo seu interesse! Analisaremos sua solicitação e entraremos em contato em breve com seu orçamento.
+                </p>
+                <button onclick="closeConfirmationModal()" 
+                    class="px-6 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20 bg-rose-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-playfair font-bold text-rose-800 mb-4">Nossa Galeria</h2>
+                <p class="text-rose-600 max-w-2xl mx-auto">Conheça alguns dos nossos trabalhos e transformações</p>
+            </div>
+            
             <div class="flex flex-wrap justify-center gap-4 mb-12">
-                <button onclick="filterGallery('all')" class="category-btn active bg-rose-100 text-rose-700 px-6 py-2 rounded-full font-medium transition">
-                    <i class="fas fa-th-large mr-2"></i> Todos
+                <button onclick="filterGallery('all')" class="category-btn active px-6 py-2 rounded-full font-medium transition-all duration-300 bg-rose-100 text-rose-700 hover:bg-rose-200">
+                    <i class="fas fa-th-large mr-2"></i>Todos
                 </button>
-                <button onclick="filterGallery('new')" class="category-btn bg-rose-100 text-rose-700 px-6 py-2 rounded-full font-medium transition">
-                    <i class="fas fa-star mr-2"></i> Lançamentos
+                <button onclick="filterGallery('new')" class="category-btn px-6 py-2 rounded-full font-medium transition-all duration-300 bg-rose-100 text-rose-700 hover:bg-rose-200">
+                    <i class="fas fa-star mr-2"></i>Lançamentos
                 </button>
-                <button onclick="filterGallery('novelty')" class="category-btn bg-rose-100 text-rose-700 px-6 py-2 rounded-full font-medium transition">
-                    <i class="fas fa-lightbulb mr-2"></i> Novidades
+                <button onclick="filterGallery('novelty')" class="category-btn px-6 py-2 rounded-full font-medium transition-all duration-300 bg-rose-100 text-rose-700 hover:bg-rose-200">
+                    <i class="fas fa-lightbulb mr-2"></i>Novidades
                 </button>
             </div>
             
-            <!-- Gallery Grid -->
             <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 <!-- Photos will be loaded dynamically -->
             </div>
         </div>
     </section>
 
-    <!-- Services Section -->
-    <section id="services" class="py-16 bg-rose-100">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center text-rose-800 mb-12">Nossos Serviços</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-                    <div class="text-rose-500 text-4xl mb-4">
-                        <i class="fas fa-tshirt"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-rose-800 mb-3">Roupas Sob Medida</h3>
-                    <p class="text-rose-700">Criação de peças exclusivas feitas especialmente para você, com medidas personalizadas e tecidos de alta qualidade.</p>
-                </div>
-                
-                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-                    <div class="text-rose-500 text-4xl mb-4">
-                        <i class="fas fa-redo"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-rose-800 mb-3">Reformas</h3>
-                    <p class="text-rose-700">Transformamos suas peças antigas em novas criações, atualizando o estilo e ajustando ao seu corpo.</p>
-                </div>
-                
-                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-                    <div class="text-rose-500 text-4xl mb-4">
-                        <i class="fas fa-magic"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-rose-800 mb-3">Customização</h3>
-                    <p class="text-rose-700">Adicionamos detalhes exclusivos às suas peças, como bordados, apliques e ajustes criativos.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Repair Requests Section -->
-    <section id="repairs" class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center text-rose-800 mb-12">Solicitar Reparos</h2>
-            
-            <div class="max-w-3xl mx-auto">
-                <div class="repair-form p-8 rounded-lg shadow-lg border border-rose-200">
-                    <h3 class="text-xl font-bold text-rose-800 mb-6">Envie sua peça para reparo</h3>
-                    
-                    <form id="repairForm" class="space-y-6">
-                        <div>
-                            <label for="name" class="block text-rose-700 font-medium mb-2">Seu Nome</label>
-                            <input type="text" id="name" class="w-full px-4 py-2 border border-rose-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
-                        </div>
-                        
-                        <div>
-                            <label for="email" class="block text-rose-700 font-medium mb-2">E-mail</label>
-                            <input type="email" id="email" class="w-full px-4 py-2 border border-rose-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
-                        </div>
-                        
-                        <div>
-                            <label for="phone" class="block text-rose-700 font-medium mb-2">Telefone</label>
-                            <input type="tel" id="phone" class="w-full px-4 py-2 border border-rose-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
-                        </div>
-                        
-                        <div>
-                            <label for="repairType" class="block text-rose-700 font-medium mb-2">Tipo de Reparo</label>
-                            <select id="repairType" class="w-full px-4 py-2 border border-rose-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
-                                <option value="">Selecione...</option>
-                                <option value="bainha">Ajuste de bainha</option>
-                                <option value="rasgo">Conserto de rasgo</option>
-                                <option value="zíper">Troca de zíper</option>
-                                <option value="botao">Reposição de botões</option>
-                                <option value="outro">Outro</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label for="description" class="block text-rose-700 font-medium mb-2">Descrição do Reparo</label>
-                            <textarea id="description" rows="4" class="w-full px-4 py-2 border border-rose-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"></textarea>
-                        </div>
-                        
-                        <div>
-                            <label for="photo" class="block text-rose-700 font-medium mb-2">Foto da Peça (opcional)</label>
-                            <input type="file" id="photo" accept="image/*" class="w-full px-4 py-2 border border-rose-300 rounded-lg">
-                        </div>
-                        
-                        <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
-                            Enviar Solicitação
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Contact Section -->
-    <section id="contact" class="py-16 bg-rose-800 text-white">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12">Entre em Contato</h2>
+    <section id="contact" class="py-20 bg-gradient-to-br from-rose-800 to-rose-900 text-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-playfair font-bold mb-4">Entre em Contato</h2>
+                <p class="text-rose-200 max-w-2xl mx-auto">Estamos aqui para transformar suas ideias em realidade</p>
+            </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
-                <div>
-                    <h3 class="text-xl font-bold mb-6">Informações de Contato</h3>
-                    
-                    <div class="space-y-4">
-                        <div class="flex items-start">
-                            <i class="fas fa-map-marker-alt text-rose-300 text-xl mt-1 mr-4"></i>
-                            <div>
-                                <h4 class="font-bold">Endereço</h4>
-                                <p>Rua Dona Maria Umbelina, 268<br>Taquaral<br>Campinas - SP</p>
+                <div class="space-y-8">
+                    <div>
+                        <h3 class="text-2xl font-playfair font-bold mb-6">Informações de Contato</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <i class="fas fa-map-marker-alt text-rose-300 text-xl mt-1 mr-4"></i>
+                                <div>
+                                    <h4 class="font-bold mb-1">Endereço</h4>
+                                    <p class="text-rose-200">Rua Dona Maria Umbelina, 268<br>Taquaral<br>Campinas - SP</p>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="flex items-start">
-                            <i class="fas fa-phone-alt text-rose-300 text-xl mt-1 mr-4"></i>
-                            <div>
-                                <h4 class="font-bold">Telefone</h4>
-                                <p>(11) 98765-4321</p>
+                            
+                            <div class="flex items-start">
+                                <i class="fas fa-phone-alt text-rose-300 text-xl mt-1 mr-4"></i>
+                                <div>
+                                    <h4 class="font-bold mb-1">Telefone</h4>
+                                    <p><a href="tel:+5519982751041" class="text-rose-200 hover:text-white transition-colors">(19) 98275-1041</a></p>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="flex items-start">
-                            <i class="fas fa-envelope text-rose-300 text-xl mt-1 mr-4"></i>
-                            <div>
-                                <h4 class="font-bold">E-mail</h4>
-                                <p>contato@rosacosturas.com.br</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start">
-                            <i class="fas fa-clock text-rose-300 text-xl mt-1 mr-4"></i>
-                            <div>
-                                <h4 class="font-bold">Horário de Funcionamento</h4>
-                                <p>Segunda a Sexta: 9h às 18h<br>Sábado: 9h às 13h</p>
+                            
+                            <div class="flex items-start">
+                                <i class="fas fa-clock text-rose-300 text-xl mt-1 mr-4"></i>
+                                <div>
+                                    <h4 class="font-bold mb-1">Horário de Funcionamento</h4>
+                                    <p class="text-rose-200">Segunda a Sexta: 9h às 18h<br>Sábado: 9h às 13h</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="mt-8">
-                        <h4 class="font-bold mb-4">Siga-nos</h4>
+                    <div>
+                        <h4 class="font-bold mb-4">Redes Sociais</h4>
                         <div class="flex space-x-4">
-                            <a href="#" class="text-rose-300 hover:text-white text-2xl"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="text-rose-300 hover:text-white text-2xl"><i class="fab fa-facebook"></i></a>
-                            <a href="#" class="text-rose-300 hover:text-white text-2xl"><i class="fab fa-whatsapp"></i></a>
+                            <a href="https://instagram.com/rosacosturas" target="_blank" rel="noopener noreferrer" 
+                               class="bg-rose-700 hover:bg-rose-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
+                               title="Siga-nos no Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://wa.me/5519982751041" target="_blank" rel="noopener noreferrer" 
+                               class="bg-rose-700 hover:bg-rose-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
+                               title="Fale conosco no WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
                 
-                <div>
-                    <h3 class="text-xl font-bold mb-6">Envie uma Mensagem</h3>
-                    
-                    <form class="space-y-4">
-                        <div>
-                            <label for="contactName" class="block mb-2">Seu Nome</label>
-                            <input type="text" id="contactName" class="w-full px-4 py-2 bg-rose-900 bg-opacity-50 border border-rose-700 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-white placeholder-rose-400">
-                        </div>
-                        
-                        <div>
-                            <label for="contactEmail" class="block mb-2">Seu E-mail</label>
-                            <input type="email" id="contactEmail" class="w-full px-4 py-2 bg-rose-900 bg-opacity-50 border border-rose-700 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-white placeholder-rose-400">
-                        </div>
-                        
-                        <div>
-                            <label for="contactSubject" class="block mb-2">Assunto</label>
-                            <input type="text" id="contactSubject" class="w-full px-4 py-2 bg-rose-900 bg-opacity-50 border border-rose-700 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-white placeholder-rose-400">
-                        </div>
-                        
-                        <div>
-                            <label for="contactMessage" class="block mb-2">Mensagem</label>
-                            <textarea id="contactMessage" rows="4" class="w-full px-4 py-2 bg-rose-900 bg-opacity-50 border border-rose-700 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-white placeholder-rose-400"></textarea>
-                        </div>
-                        
-                        <button type="submit" class="w-full bg-white hover:bg-rose-100 text-rose-800 font-bold py-3 px-6 rounded-lg transition duration-300">
-                            Enviar Mensagem
-                        </button>
-                    </form>
+                <div class="gradient-border">
+                    <div class="bg-white p-8 rounded-lg">
+                        <h3 class="text-2xl font-playfair font-bold text-rose-800 mb-6">Envie uma Mensagem</h3>
+                        <form class="space-y-6">
+                            <div>
+                                <label for="name" class="block text-rose-800 font-medium mb-2">Seu Nome</label>
+                                <input type="text" id="name" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
+                            </div>
+                            
+                            <div>
+                                <label for="email" class="block text-rose-800 font-medium mb-2">Seu E-mail</label>
+                                <input type="email" id="email" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
+                            </div>
+                            
+                            <div>
+                                <label for="message" class="block text-rose-800 font-medium mb-2">Mensagem</label>
+                                <textarea id="message" rows="4" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl">
+                                Enviar Mensagem
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-rose-900 text-rose-200 py-8">
-        <div class="container mx-auto px-4">
+    <footer class="bg-white py-12">
+        <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-4 md:mb-0">
-                    <div class="flex items-center">
-                        <i class="fas fa-scissors text-2xl text-rose-300 mr-2"></i>
-                        <h2 class="text-xl font-bold text-white">Rosa Costuras</h2>
+                <div class="mb-8 md:mb-0">
+                    <div class="flex items-center mb-4">
+                        <img src="atelierosa.png" alt="Rosa Costuras Logo" class="h-12 rounded-lg mr-3">
+                        <div>
+                            <h2 class="text-xl font-playfair font-bold text-rose-800">Rosa Costuras</h2>
+                            <p class="text-sm text-rose-600">Costurando sonhos desde 2012</p>
+                        </div>
                     </div>
-                    <p class="text-sm mt-2">Costurando sonhos desde 2012</p>
                 </div>
                 
                 <div class="flex flex-col items-center md:items-end">
-                    <p class="text-sm mb-2">&copy; 2012 Rosa Costuras. Todos os direitos reservados.</p>
-                    <a href="admin.html" class="text-rose-300 hover:text-white text-sm transition-colors duration-200">
+                    <p class="text-rose-600 text-sm mb-2">&copy; 2012 Rosa Costuras. Todos os direitos reservados.</p>
+                    <a href="admin.html" class="text-rose-400 hover:text-rose-600 text-sm transition-colors duration-200">
                         <i class="fas fa-lock text-xs mr-1"></i>Área Administrativa
                     </a>
                 </div>
@@ -286,69 +418,21 @@
         </div>
     </footer>
 
-    <!-- Upload Modal -->
-    <div id="uploadModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold text-rose-800">Adicionar Foto</h3>
-                <button onclick="closeUploadModal()" class="text-rose-500 hover:text-rose-700">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            
-            <form id="uploadForm" class="space-y-4">
-                <div>
-                    <label for="uploadPhoto" class="block text-rose-700 font-medium mb-2">Selecione a Foto</label>
-                    <input type="file" id="uploadPhoto" accept="image/*" class="w-full px-4 py-2 border border-rose-300 rounded-lg">
-                </div>
-                
-                <div>
-                    <label for="photoTitle" class="block text-rose-700 font-medium mb-2">Título</label>
-                    <input type="text" id="photoTitle" class="w-full px-4 py-2 border border-rose-300 rounded-lg">
-                </div>
-                
-                <div>
-                    <label for="photoCategory" class="block text-rose-700 font-medium mb-2">Categoria</label>
-                    <select id="photoCategory" class="w-full px-4 py-2 border border-rose-300 rounded-lg">
-                        <option value="new">Lançamento</option>
-                        <option value="novelty">Novidade</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <label for="photoDescription" class="block text-rose-700 font-medium mb-2">Descrição</label>
-                    <textarea id="photoDescription" rows="3" class="w-full px-4 py-2 border border-rose-300 rounded-lg"></textarea>
-                </div>
-                
-                <div class="flex justify-end space-x-4 pt-4">
-                    <button type="button" onclick="closeUploadModal()" class="px-4 py-2 border border-rose-300 text-rose-700 rounded-lg hover:bg-rose-50 transition">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition">
-                        Enviar Foto
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script>
         // Gallery Filter Function
         function filterGallery(category) {
             const items = document.querySelectorAll('.gallery-item');
             const buttons = document.querySelectorAll('.category-btn');
             
-            // Update active button
             buttons.forEach(btn => {
                 if (btn.textContent.includes(category === 'all' ? 'Todos' : 
-                                            category === 'new' ? 'Lançamentos' : 'Novidades')) {
+                                          category === 'new' ? 'Lançamentos' : 'Novidades')) {
                     btn.classList.add('active');
                 } else {
                     btn.classList.remove('active');
                 }
             });
             
-            // Filter items
             items.forEach(item => {
                 if (category === 'all' || item.dataset.category === category) {
                     item.style.display = 'block';
@@ -357,40 +441,40 @@
                 }
             });
         }
-        
-        // Load gallery items from localStorage
+
+        // Load gallery items
         function loadGalleryItems() {
             const galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
             const grid = document.getElementById('galleryGrid');
             
             if (galleryItems.length === 0) {
-                // Load default items if no items in localStorage
                 grid.innerHTML = `
                     <div class="gallery-item new" data-category="new">
-                        <div class="bg-rose-50 rounded-lg overflow-hidden shadow-md">
-                            <img src="https://images.unsplash.com/photo-1539533018447-63fcce2678e6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" 
-                                 alt="Vestido novo" 
+                        <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                            <img src="atelierosa.png" 
+                                 alt="Exemplo de trabalho" 
                                  class="w-full h-64 object-cover">
-                            <div class="p-4">
-                                <h3 class="font-bold text-rose-800 mb-2">Vestido Floral</h3>
-                                <p class="text-sm text-rose-600 mb-3">Novo modelo primavera/verão</p>
-                                <span class="inline-block bg-rose-200 text-rose-800 text-xs px-2 py-1 rounded-full">Lançamento</span>
+                            <div class="p-6">
+                                <h3 class="font-bold text-rose-800 mb-2">Nosso Trabalho</h3>
+                                <p class="text-rose-600 mb-4">Qualidade e dedicação em cada detalhe</p>
+                                <span class="inline-block bg-rose-100 text-rose-800 text-xs px-3 py-1 rounded-full">
+                                    Exemplo
+                                </span>
                             </div>
                         </div>
                     </div>
-                    <!-- Add more default items here -->
                 `;
             } else {
                 grid.innerHTML = galleryItems.map(item => `
                     <div class="gallery-item ${item.category}" data-category="${item.category}">
-                        <div class="bg-rose-50 rounded-lg overflow-hidden shadow-md">
+                        <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
                             <img src="${item.image}" 
                                  alt="${item.title}" 
                                  class="w-full h-64 object-cover">
-                            <div class="p-4">
+                            <div class="p-6">
                                 <h3 class="font-bold text-rose-800 mb-2">${item.title}</h3>
-                                <p class="text-sm text-rose-600 mb-3">${item.description}</p>
-                                <span class="inline-block bg-rose-200 text-rose-800 text-xs px-2 py-1 rounded-full">
+                                <p class="text-rose-600 mb-4">${item.description}</p>
+                                <span class="inline-block bg-rose-100 text-rose-800 text-xs px-3 py-1 rounded-full">
                                     ${item.category === 'new' ? 'Lançamento' : 'Novidade'}
                                 </span>
                             </div>
@@ -399,43 +483,100 @@
                 `).join('');
             }
         }
-        
+
         // Initialize gallery
         loadGalleryItems();
         
-        // Upload Modal Functions
-        function openUploadModal() {
-            document.getElementById('uploadModal').classList.remove('hidden');
-        }
-        
-        function closeUploadModal() {
-            document.getElementById('uploadModal').classList.add('hidden');
-        }
-        
-        // Form Submission
-        document.getElementById('repairForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Solicitação de reparo enviada com sucesso! Entraremos em contato em breve.');
-            this.reset();
-        });
-        
-        document.getElementById('uploadForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Foto enviada com sucesso! Após análise, será publicada na galeria.');
-            this.reset();
-            closeUploadModal();
-        });
-        
+        // Form submission
         document.querySelector('form').addEventListener('submit', function(e) {
             e.preventDefault();
             alert('Mensagem enviada com sucesso! Responderemos em breve.');
             this.reset();
         });
         
-        // Mobile Menu Toggle (would need more implementation)
+        // Mobile menu
         document.querySelector('.md\\:hidden').addEventListener('click', function() {
-            alert('Menu mobile seria implementado aqui');
+            // Implementação do menu mobile seria aqui
+            alert('Menu mobile em desenvolvimento');
         });
+
+        // Mostrar/ocultar campos específicos baseado no tipo de serviço
+        document.querySelectorAll('input[name="serviceType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const repairTypes = document.getElementById('repairTypes');
+                const measurementsSection = document.getElementById('measurementsSection');
+                
+                if (this.value === 'repair') {
+                    repairTypes.classList.remove('hidden');
+                    measurementsSection.classList.add('hidden');
+                } else {
+                    repairTypes.classList.add('hidden');
+                    measurementsSection.classList.remove('hidden');
+                }
+            });
+        });
+
+        // Preview de imagens
+        const imageUpload = document.getElementById('imageUpload');
+        const imagePreview = document.getElementById('imagePreview');
+        const dropZone = document.getElementById('dropZone');
+
+        // Função para adicionar preview
+        function addImagePreview(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const div = document.createElement('div');
+                div.className = 'relative';
+                div.innerHTML = `
+                    <img src="${e.target.result}" class="w-full h-32 object-cover rounded-lg">
+                    <button type="button" class="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"
+                            onclick="this.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                imagePreview.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Upload por clique
+        imageUpload.addEventListener('change', function(e) {
+            Array.from(e.target.files).forEach(addImagePreview);
+        });
+
+        // Upload por drag and drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('border-rose-400');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('border-rose-400');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-rose-400');
+            Array.from(e.dataTransfer.files)
+                .filter(file => file.type.startsWith('image/'))
+                .forEach(addImagePreview);
+        });
+
+        // Manipulação do formulário
+        document.getElementById('quoteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Aqui você adicionaria a lógica para enviar os dados para o servidor
+            // Por enquanto, apenas mostraremos o modal de confirmação
+            document.getElementById('confirmationModal').classList.remove('hidden');
+            this.reset();
+            imagePreview.innerHTML = '';
+        });
+
+        // Função para fechar o modal de confirmação
+        function closeConfirmationModal() {
+            document.getElementById('confirmationModal').classList.add('hidden');
+        }
     </script>
 </body>
 </html>
