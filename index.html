@@ -785,22 +785,11 @@
                          onerror="this.onerror=null; this.src='atelie.jpg'; console.warn('Erro ao carregar imagem:', this.src);"
                          onclick="openImageModal(this, ${index})">
                     <div class="overlay">
-                        <button class="edit-button" onclick="openEditForm(this, event)">
-                            <i class="fas fa-edit"></i>
-                        </button>
                         <h3 class="font-bold text-white text-xl mb-2">${item.title}</h3>
                         <p class="text-gray-200 mb-4">${item.description}</p>
                         <span class="inline-block bg-emerald-500/50 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm">
                             ${item.category === 'new' ? 'Lançamento' : 'Novidade'}
                         </span>
-                    </div>
-                    <div class="edit-form">
-                        <input type="text" placeholder="Título da imagem" value="${item.title}">
-                        <textarea placeholder="Descrição da imagem">${item.description}</textarea>
-                        <div class="buttons">
-                            <button class="save" onclick="saveEdit(this, event)">Salvar</button>
-                            <button class="cancel" onclick="cancelEdit(this, event)">Cancelar</button>
-                        </div>
                     </div>
                 </div>
             `).join('');
@@ -1080,57 +1069,6 @@
                 if (e.key === 'ArrowRight') changeImage(1);
             }
         });
-
-        function openEditForm(button, event) {
-            event.stopPropagation();
-            const galleryItem = button.closest('.gallery-item');
-            const editForm = galleryItem.querySelector('.edit-form');
-            editForm.classList.add('active');
-        }
-
-        function saveEdit(button, event) {
-            event.stopPropagation();
-            const galleryItem = button.closest('.gallery-item');
-            const editForm = galleryItem.querySelector('.edit-form');
-            const title = editForm.querySelector('input').value;
-            const description = editForm.querySelector('textarea').value;
-            const image = galleryItem.querySelector('img').src;
-            const category = galleryItem.dataset.category;
-            
-            // Atualizar o overlay
-            const overlay = galleryItem.querySelector('.overlay');
-            overlay.querySelector('h3').textContent = title;
-            overlay.querySelector('p').textContent = description;
-            
-            try {
-                // Atualizar o localStorage
-                let galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
-                const index = Array.from(galleryItem.parentNode.children).indexOf(galleryItem);
-                
-                // Se não existir item, cria um novo
-                if (!galleryItems[index]) {
-                    galleryItems[index] = {
-                        image: image,
-                        category: category
-                    };
-                }
-                
-                galleryItems[index].title = title;
-                galleryItems[index].description = description;
-                localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
-            } catch (e) {
-                console.warn('Erro ao salvar alterações:', e);
-            }
-            
-            // Fechar o formulário
-            editForm.classList.remove('active');
-        }
-
-        function cancelEdit(button, event) {
-            event.stopPropagation();
-            const editForm = button.closest('.edit-form');
-            editForm.classList.remove('active');
-        }
     </script>
 </body>
 </html>

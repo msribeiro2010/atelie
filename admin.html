@@ -57,55 +57,195 @@
     </style>
 </head>
 <body class="bg-emerald-50 font-poppins dark:bg-dark-50">
-    <!-- Header -->
-    <header class="bg-white shadow-lg dark:bg-dark-100">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <a href="index.html" class="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300">
+    <!-- Login Section -->
+    <div id="loginSection" class="min-h-screen flex items-center justify-center">
+        <div class="bg-white dark:bg-dark-100 p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="text-center mb-8">
+                <img src="atelie.jpg" alt="Rosa Costuras Logo" class="h-20 mx-auto mb-4">
+                <h1 class="text-2xl font-playfair font-bold text-emerald-800 dark:text-emerald-300">Área Administrativa</h1>
+                <p class="text-emerald-600 dark:text-emerald-400 mt-2">Faça login para continuar</p>
+            </div>
+            
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label for="username" class="block text-emerald-800 dark:text-emerald-300 font-medium mb-2">Usuário</label>
+                    <input type="text" id="username" 
+                           class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500"
+                           required>
+                </div>
+                
+                <div>
+                    <label for="password" class="block text-emerald-800 dark:text-emerald-300 font-medium mb-2">Senha</label>
+                    <input type="password" id="password" 
+                           class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500"
+                           required>
+                </div>
+
+                <div id="loginError" class="text-red-500 text-center hidden"></div>
+                
+                <button type="submit" 
+                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 flex items-center justify-center">
+                    <span>Entrar</span>
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <a href="index.html" class="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 text-sm">
                     <i class="fas fa-arrow-left mr-2"></i>Voltar ao site
                 </a>
             </div>
-            <h1 class="text-2xl font-playfair font-bold text-emerald-800 dark:text-emerald-300">Área Administrativa</h1>
-            <button id="darkModeToggle" class="p-2 rounded-full hover:bg-emerald-100 dark:hover:bg-dark-200 transition-colors">
-                <i class="fas fa-moon dark:hidden text-emerald-600"></i>
-                <i class="fas fa-sun hidden dark:block text-emerald-300"></i>
-            </button>
         </div>
-    </header>
+    </div>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-6 py-12">
-        <!-- Gallery Management -->
-        <section class="mb-12">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-playfair font-bold text-emerald-800 dark:text-emerald-300">Gerenciar Galeria</h2>
-                <button onclick="clearGallery()" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
-                    <i class="fas fa-trash-alt mr-2"></i>Limpar Galeria
-                </button>
-            </div>
-
-            <!-- Upload Area -->
-            <div class="mb-8">
-                <div id="dropZone" class="border-2 border-dashed border-emerald-300 dark:border-emerald-700 rounded-lg p-8 text-center cursor-pointer hover:border-emerald-400 dark:hover:border-emerald-600 transition-colors">
-                    <input type="file" id="imageUpload" multiple accept="image/*" class="hidden">
-                    <i class="fas fa-cloud-upload-alt text-5xl text-emerald-400 dark:text-emerald-600 mb-4"></i>
-                    <h3 class="text-xl font-medium text-emerald-700 dark:text-emerald-300 mb-2">Arraste imagens aqui</h3>
-                    <p class="text-emerald-600 dark:text-emerald-400">ou</p>
-                    <button onclick="document.getElementById('imageUpload').click()" class="mt-4 px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors">
-                        Selecionar Arquivos
+    <!-- Admin Content -->
+    <div id="adminContent" class="hidden">
+        <!-- Header -->
+        <header class="bg-white shadow-lg dark:bg-dark-100">
+            <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar ao site
+                    </a>
+                </div>
+                <h1 class="text-2xl font-playfair font-bold text-emerald-800 dark:text-emerald-300">Área Administrativa</h1>
+                <div class="flex items-center space-x-4">
+                    <button id="darkModeToggle" 
+                            class="p-2 rounded-full hover:bg-emerald-100 dark:hover:bg-dark-200 transition-colors"
+                            title="Alternar modo escuro"
+                            aria-label="Alternar modo escuro">
+                        <i class="fas fa-moon dark:hidden text-emerald-600"></i>
+                        <i class="fas fa-sun hidden dark:block text-emerald-300"></i>
                     </button>
-                    <p class="text-sm text-emerald-500 dark:text-emerald-400 mt-4">Formatos aceitos: JPG, PNG, JPEG</p>
+                    <button onclick="logout()" 
+                            class="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
+                            title="Sair da área administrativa">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
                 </div>
             </div>
+        </header>
 
-            <!-- Gallery Grid -->
-            <div id="galleryGrid" class="gallery-grid">
-                <!-- Images will be loaded here -->
-            </div>
-        </section>
-    </main>
+        <!-- Main Content -->
+        <main class="container mx-auto px-6 py-12">
+            <!-- Gallery Management -->
+            <section class="mb-12">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-3xl font-playfair font-bold text-emerald-800 dark:text-emerald-300">Gerenciar Galeria</h2>
+                    <button onclick="clearGallery()" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                        <i class="fas fa-trash-alt mr-2"></i>Limpar Galeria
+                    </button>
+                </div>
+
+                <!-- Upload Area -->
+                <div class="mb-8">
+                    <div id="dropZone" class="border-2 border-dashed border-emerald-300 dark:border-emerald-700 rounded-lg p-8 text-center cursor-pointer hover:border-emerald-400 dark:hover:border-emerald-600 transition-colors">
+                        <label for="imageUpload" class="sr-only">Selecionar imagens para upload</label>
+                        <input type="file" 
+                               id="imageUpload" 
+                               multiple 
+                               accept="image/*" 
+                               class="hidden"
+                               title="Selecionar imagens para upload"
+                               aria-label="Selecionar imagens para upload">
+                        <i class="fas fa-cloud-upload-alt text-5xl text-emerald-400 dark:text-emerald-600 mb-4"></i>
+                        <h3 class="text-xl font-medium text-emerald-700 dark:text-emerald-300 mb-2">Arraste imagens aqui</h3>
+                        <p class="text-emerald-600 dark:text-emerald-400">ou</p>
+                        <button onclick="document.getElementById('imageUpload').click()" class="mt-4 px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors">
+                            Selecionar Arquivos
+                        </button>
+                        <p class="text-sm text-emerald-500 dark:text-emerald-400 mt-4">Formatos aceitos: JPG, PNG, JPEG</p>
+                    </div>
+                </div>
+
+                <!-- Gallery Grid -->
+                <div id="galleryGrid" class="gallery-grid">
+                    <!-- Images will be loaded here -->
+                </div>
+            </section>
+        </main>
+    </div>
 
     <script>
+        // Login handling
+        const ADMIN_CREDENTIALS = {
+            username: 'admin',
+            password: 'rosa2024'
+        };
+
+        // Função para gerar um token de sessão
+        function generateSessionToken() {
+            return Math.random().toString(36).substring(2) + Date.now().toString(36);
+        }
+
+        // Função para verificar se o token ainda é válido (24 horas)
+        function isTokenValid(token) {
+            if (!token) return false;
+            const [timestamp] = token.split('_');
+            const tokenDate = new Date(parseInt(timestamp));
+            const now = new Date();
+            const hours = Math.abs(now - tokenDate) / 36e5; // Diferença em horas
+            return hours < 24;
+        }
+
+        // Check if already logged in
+        function checkAuth() {
+            const sessionToken = localStorage.getItem('adminSessionToken');
+            const isAuthenticated = isTokenValid(sessionToken);
+            
+            if (!isAuthenticated) {
+                // Limpa dados da sessão expirada
+                localStorage.removeItem('adminSessionToken');
+                localStorage.removeItem('adminAuthenticated');
+            }
+
+            document.getElementById('loginSection').style.display = isAuthenticated ? 'none' : 'flex';
+            document.getElementById('adminContent').style.display = isAuthenticated ? 'block' : 'none';
+            
+            if (isAuthenticated) {
+                loadGalleryItems();
+            }
+        }
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                // Gera token de sessão com timestamp
+                const timestamp = Date.now();
+                const token = `${timestamp}_${generateSessionToken()}`;
+                localStorage.setItem('adminSessionToken', token);
+                localStorage.setItem('adminAuthenticated', 'true');
+                checkAuth();
+                
+                // Limpa os campos do formulário
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+            } else {
+                errorDiv.textContent = 'Usuário ou senha incorretos';
+                errorDiv.classList.remove('hidden');
+            }
+        });
+
+        // Add logout function
+        function logout() {
+            localStorage.removeItem('adminSessionToken');
+            localStorage.removeItem('adminAuthenticated');
+            localStorage.removeItem('galleryItems'); // Opcional: limpar dados da galeria ao sair
+            checkAuth();
+            window.location.href = 'index.html'; // Redireciona para a página principal
+        }
+
+        // Verifica autenticação a cada minuto
+        setInterval(checkAuth, 60000);
+
+        // Initialize auth check
+        checkAuth();
+
         // Dark mode functionality
         const darkModeToggle = document.getElementById('darkModeToggle');
         const html = document.documentElement;
@@ -124,6 +264,43 @@
         function loadGalleryItems() {
             const grid = document.getElementById('galleryGrid');
             let galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
+            
+            // Se não houver itens, use os itens padrão
+            if (galleryItems.length === 0) {
+                galleryItems = [
+                    {
+                        image: 'images/vestido1.jpeg',
+                        title: 'Vestido Elegante',
+                        description: 'Ajustes perfeitos para ocasiões especiais',
+                        category: 'new'
+                    },
+                    {
+                        image: 'images/vestido2.jpeg',
+                        title: 'Vestido Casual',
+                        description: 'Conforto e estilo para o dia a dia',
+                        category: 'new'
+                    },
+                    {
+                        image: 'images/vestido3.jpeg',
+                        title: 'Vestido Festa',
+                        description: 'Customização para eventos especiais',
+                        category: 'novelty'
+                    },
+                    {
+                        image: 'images/vestido4.jpeg',
+                        title: 'Vestido Moderno',
+                        description: 'Design contemporâneo com acabamento impecável',
+                        category: 'new'
+                    },
+                    {
+                        image: 'images/vestido5.png',
+                        title: 'Vestido Premium',
+                        description: 'Alta costura com detalhes únicos',
+                        category: 'novelty'
+                    }
+                ];
+                localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
+            }
             
             grid.innerHTML = galleryItems.map((item, index) => `
                 <div class="gallery-item" data-index="${index}">
