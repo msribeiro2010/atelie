@@ -42,7 +42,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
         .category-btn.active {
-            background-color: #f472b6;
+            background-color: #34d399;
             color: white;
         }
         .repair-form {
@@ -54,7 +54,7 @@
         .gradient-border {
             position: relative;
             border-radius: 0.5rem;
-            background: linear-gradient(45deg, #fecdd3, #fb7185, #e11d48);
+            background: linear-gradient(45deg, #6ee7b7, #34d399, #059669);
             padding: 2px;
         }
         
@@ -68,7 +68,7 @@
         }
 
         .modern-shadow {
-            box-shadow: 0 10px 30px -5px rgba(251, 113, 133, 0.2);
+            box-shadow: 0 10px 30px -5px rgba(52, 211, 153, 0.2);
         }
 
         /* Mobile Menu */
@@ -88,36 +88,36 @@
         }
 
         .dark .gradient-border {
-            background: linear-gradient(45deg, #831843, #be185d, #db2777);
+            background: linear-gradient(45deg, #065f46, #047857, #059669);
         }
     </style>
 </head>
-<body class="bg-rose-50 font-poppins dark:bg-dark-50">
+<body class="bg-emerald-50 font-poppins dark:bg-dark-50">
     <!-- Header -->
     <header class="bg-white shadow-lg sticky top-0 z-50 dark:bg-dark-100">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
                 <img src="atelierosa.png" alt="Rosa Costuras Logo" class="h-12 md:h-16 rounded-lg">
                 <div>
-                    <h1 class="text-2xl md:text-3xl font-playfair font-bold text-rose-800 dark:text-rose-300">Rosa Costuras</h1>
-                    <p class="text-xs md:text-sm text-rose-600 dark:text-rose-400 tracking-wide">ATELIÊ DE COSTURA CRIATIVA</p>
+                    <h1 class="text-2xl md:text-3xl font-playfair font-bold text-emerald-800 dark:text-emerald-300">Rosa Costuras</h1>
+                    <p class="text-xs md:text-sm text-emerald-600 dark:text-emerald-400 tracking-wide">ATELIÊ DE COSTURA CRIATIVA</p>
                 </div>
             </div>
 
             <!-- Dark Mode Toggle -->
-            <button id="darkModeToggle" class="p-2 rounded-full hover:bg-rose-100 dark:hover:bg-dark-200 transition-colors" title="Alternar modo escuro">
-                <i class="fas fa-moon dark:hidden text-rose-600"></i>
-                <i class="fas fa-sun hidden dark:block text-rose-300"></i>
+            <button id="darkModeToggle" class="p-2 rounded-full hover:bg-emerald-100 dark:hover:bg-dark-200 transition-colors" title="Alternar modo escuro">
+                <i class="fas fa-moon dark:hidden text-emerald-600"></i>
+                <i class="fas fa-sun hidden dark:block text-emerald-300"></i>
             </button>
 
             <nav class="hidden md:flex space-x-8">
-                <a href="#home" class="text-rose-700 dark:text-rose-300 hover:text-rose-500 dark:hover:text-rose-400 font-medium transition-colors duration-200">Início</a>
-                <a href="#gallery" class="text-rose-700 dark:text-rose-300 hover:text-rose-500 dark:hover:text-rose-400 font-medium transition-colors duration-200">Galeria</a>
-                <a href="#services" class="text-rose-700 dark:text-rose-300 hover:text-rose-500 dark:hover:text-rose-400 font-medium transition-colors duration-200">Serviços</a>
-                <a href="#contact" class="text-rose-700 dark:text-rose-300 hover:text-rose-500 dark:hover:text-rose-400 font-medium transition-colors duration-200">Contato</a>
+                <a href="#home" class="text-emerald-700 dark:text-emerald-300 hover:text-emerald-500 dark:hover:text-emerald-400 font-medium transition-colors duration-200">Início</a>
+                <a href="#gallery" class="text-emerald-700 dark:text-emerald-300 hover:text-emerald-500 dark:hover:text-emerald-400 font-medium transition-colors duration-200">Galeria</a>
+                <a href="#services" class="text-emerald-700 dark:text-emerald-300 hover:text-emerald-500 dark:hover:text-emerald-400 font-medium transition-colors duration-200">Serviços</a>
+                <a href="#contact" class="text-emerald-700 dark:text-emerald-300 hover:text-emerald-500 dark:hover:text-emerald-400 font-medium transition-colors duration-200">Contato</a>
             </nav>
 
-            <button id="mobileMenuBtn" class="md:hidden text-rose-700 dark:text-rose-300" title="Abrir Menu">
+            <button id="mobileMenuBtn" class="md:hidden text-emerald-700 dark:text-emerald-300" title="Abrir Menu">
                 <i class="fas fa-bars text-2xl"></i>
             </button>
         </div>
@@ -125,14 +125,14 @@
         <!-- Mobile Menu -->
         <div id="mobileMenu" class="mobile-menu fixed top-0 left-0 h-full w-64 bg-white dark:bg-dark-100 shadow-lg z-50 md:hidden">
             <div class="p-6">
-                <button id="closeMenuBtn" class="mb-8 text-rose-700 dark:text-rose-300" title="Fechar Menu">
+                <button id="closeMenuBtn" class="mb-8 text-emerald-700 dark:text-emerald-300" title="Fechar Menu">
                     <i class="fas fa-times text-2xl"></i>
                 </button>
                 <nav class="flex flex-col space-y-4">
-                    <a href="#home" class="text-rose-700 dark:text-rose-300 hover:text-rose-500 dark:hover:text-rose-400 font-medium">Início</a>
-                    <a href="#gallery" class="text-rose-700 dark:text-rose-300 hover:text-rose-500 dark:hover:text-rose-400 font-medium">Galeria</a>
-                    <a href="#services" class="text-rose-700 dark:text-rose-300 hover:text-rose-500 dark:hover:text-rose-400 font-medium">Serviços</a>
-                    <a href="#contact" class="text-rose-700 dark:text-rose-300 hover:text-rose-500 dark:hover:text-rose-400 font-medium">Contato</a>
+                    <a href="#home" class="text-emerald-700 dark:text-emerald-300 hover:text-emerald-500 dark:hover:text-emerald-400 font-medium">Início</a>
+                    <a href="#gallery" class="text-emerald-700 dark:text-emerald-300 hover:text-emerald-500 dark:hover:text-emerald-400 font-medium">Galeria</a>
+                    <a href="#services" class="text-emerald-700 dark:text-emerald-300 hover:text-emerald-500 dark:hover:text-emerald-400 font-medium">Serviços</a>
+                    <a href="#contact" class="text-emerald-700 dark:text-emerald-300 hover:text-emerald-500 dark:hover:text-emerald-400 font-medium">Contato</a>
                 </nav>
             </div>
         </div>
@@ -140,28 +140,28 @@
 
     <!-- Hero Section -->
     <section id="home" class="relative py-20 overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-r from-rose-100 to-pink-100 opacity-50"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-emerald-100 to-green-100 dark:from-emerald-900/30 dark:to-green-900/30 opacity-50"></div>
         <div class="container mx-auto px-6 relative">
             <div class="flex flex-col md:flex-row items-center gap-12">
                 <div class="md:w-1/2">
-                    <h2 class="text-4xl md:text-5xl font-playfair font-bold text-rose-800 mb-6 leading-tight">
+                    <h2 class="text-4xl md:text-5xl font-playfair font-bold text-emerald-800 dark:text-emerald-300 mb-6 leading-tight">
                         Transformando Peças em Memórias Especiais
                     </h2>
-                    <p class="text-lg text-rose-700 mb-8 leading-relaxed">
+                    <p class="text-lg text-emerald-700 dark:text-emerald-400 mb-8 leading-relaxed">
                         No ateliê Rosa Costuras, cada peça é única e recebe um cuidado especial. 
                         Trazemos vida nova às suas roupas favoritas com expertise e dedicação.
                     </p>
-                    <a href="#gallery" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-rose-500 to-rose-600 text-white font-semibold rounded-full hover:from-rose-600 hover:to-rose-700 transition-all duration-300 shadow-lg hover:shadow-xl">
+                    <a href="#gallery" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold rounded-full hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl">
                         Conheça Nosso Trabalho
                         <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
                 <div class="md:w-1/2 flex justify-center">
-                    <div class="gradient-border">
+                    <div class="gradient-border w-full max-w-md">
                         <div class="p-2">
                             <img src="atelierosa.png" 
                                 alt="Ateliê de costura com máquina de costura vintage e tecidos elegantes" 
-                                class="rounded-lg w-full max-w-md object-cover modern-shadow">
+                                class="rounded-lg w-full object-cover modern-shadow">
                         </div>
                     </div>
                 </div>
@@ -170,21 +170,21 @@
     </section>
 
     <!-- Gallery Section -->
-    <section id="gallery" class="py-20 bg-rose-50">
+    <section id="gallery" class="py-20 bg-emerald-50 dark:bg-dark-100">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16">
-                <h2 class="text-4xl font-playfair font-bold text-rose-800 mb-4">Nossa Galeria</h2>
-                <p class="text-rose-600 max-w-2xl mx-auto">Conheça alguns dos nossos trabalhos e transformações</p>
+                <h2 class="text-4xl font-playfair font-bold text-emerald-800 dark:text-emerald-300 mb-4">Nossa Galeria</h2>
+                <p class="text-emerald-600 dark:text-emerald-400 max-w-2xl mx-auto">Conheça alguns dos nossos trabalhos e transformações</p>
             </div>
             
             <div class="flex flex-wrap justify-center gap-4 mb-12">
-                <button onclick="filterGallery('all')" class="category-btn active px-6 py-2 rounded-full font-medium transition-all duration-300 bg-rose-100 text-rose-700 hover:bg-rose-200">
+                <button onclick="filterGallery('all')" class="category-btn active px-6 py-2 rounded-full font-medium transition-all duration-300 bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-800">
                     <i class="fas fa-th-large mr-2"></i>Todos
                 </button>
-                <button onclick="filterGallery('new')" class="category-btn px-6 py-2 rounded-full font-medium transition-all duration-300 bg-rose-100 text-rose-700 hover:bg-rose-200">
+                <button onclick="filterGallery('new')" class="category-btn px-6 py-2 rounded-full font-medium transition-all duration-300 bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-800">
                     <i class="fas fa-star mr-2"></i>Lançamentos
                 </button>
-                <button onclick="filterGallery('novelty')" class="category-btn px-6 py-2 rounded-full font-medium transition-all duration-300 bg-rose-100 text-rose-700 hover:bg-rose-200">
+                <button onclick="filterGallery('novelty')" class="category-btn px-6 py-2 rounded-full font-medium transition-all duration-300 bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-800">
                     <i class="fas fa-lightbulb mr-2"></i>Novidades
                 </button>
             </div>
@@ -196,37 +196,37 @@
     </section>
 
     <!-- Quote Request Section -->
-    <section id="quote" class="py-20 bg-rose-50">
+    <section id="quote" class="py-20 bg-emerald-50 dark:bg-dark-100">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16">
-                <h2 class="text-4xl font-playfair font-bold text-rose-800 mb-4">Solicite um Orçamento</h2>
-                <p class="text-rose-600 max-w-2xl mx-auto">Descreva seu projeto e entraremos em contato com um orçamento personalizado</p>
+                <h2 class="text-4xl font-playfair font-bold text-emerald-800 dark:text-emerald-300 mb-4">Solicite um Orçamento</h2>
+                <p class="text-emerald-600 dark:text-emerald-400 max-w-2xl mx-auto">Descreva seu projeto e entraremos em contato com um orçamento personalizado</p>
             </div>
 
             <div class="max-w-4xl mx-auto">
                 <div class="gradient-border">
-                    <div class="bg-white p-8 rounded-lg">
+                    <div class="bg-white dark:bg-dark-100 p-8 rounded-lg">
                         <form id="quoteForm" class="space-y-8">
                             <!-- Tipo de Serviço -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label class="block text-rose-800 font-medium mb-2">Tipo de Serviço</label>
+                                    <label class="block text-emerald-800 dark:text-emerald-300 font-medium mb-2">Tipo de Serviço</label>
                                     <div class="space-y-2">
                                         <label class="flex items-center space-x-3">
-                                            <input type="radio" name="serviceType" value="repair" class="text-rose-600 focus:ring-rose-500" required>
-                                            <span class="text-rose-700">Reparos e Ajustes</span>
+                                            <input type="radio" name="serviceType" value="repair" class="text-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-700" required>
+                                            <span class="text-emerald-700 dark:text-emerald-400">Reparos e Ajustes</span>
                                         </label>
                                         <label class="flex items-center space-x-3">
-                                            <input type="radio" name="serviceType" value="custom" class="text-rose-600 focus:ring-rose-500">
-                                            <span class="text-rose-700">Confecção Personalizada</span>
+                                            <input type="radio" name="serviceType" value="custom" class="text-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-700">
+                                            <span class="text-emerald-700 dark:text-emerald-400">Confecção Personalizada</span>
                                         </label>
                                     </div>
                                 </div>
 
-                                <!-- Tipo de Reparo (aparece apenas quando "Reparos" é selecionado) -->
+                                <!-- Tipo de Reparo -->
                                 <div id="repairTypes" class="hidden">
-                                    <label class="block text-rose-800 font-medium mb-2" for="repairType">Tipo de Reparo</label>
-                                    <select id="repairType" name="repairType" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500" title="Selecione o tipo de reparo">
+                                    <label class="block text-emerald-800 dark:text-emerald-300 font-medium mb-2" for="repairType">Tipo de Reparo</label>
+                                    <select id="repairType" name="repairType" class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-700 focus:border-emerald-500 dark:focus:border-emerald-700" title="Selecione o tipo de reparo">
                                         <option value="">Selecione o tipo de reparo...</option>
                                         <option value="bainha">Ajuste de Bainha</option>
                                         <option value="zipper">Troca de Zíper</option>
@@ -239,42 +239,42 @@
 
                             <!-- Descrição do Serviço -->
                             <div>
-                                <label for="description" class="block text-rose-800 font-medium mb-2">Descreva o que você precisa</label>
+                                <label for="description" class="block text-emerald-800 dark:text-emerald-300 font-medium mb-2">Descreva o que você precisa</label>
                                 <textarea id="description" name="description" rows="4" 
-                                    class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
+                                    class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-700 focus:border-emerald-500 dark:focus:border-emerald-700"
                                     placeholder="Descreva em detalhes o serviço que você precisa..." required></textarea>
                             </div>
 
                             <!-- Upload de Imagens -->
                             <div>
-                                <label class="block text-rose-800 font-medium mb-2">Fotos de Referência</label>
-                                <div class="border-2 border-dashed border-rose-200 rounded-lg p-6 text-center" id="dropZone">
+                                <label class="block text-emerald-800 dark:text-emerald-300 font-medium mb-2">Fotos de Referência</label>
+                                <div class="border-2 border-dashed border-emerald-200 dark:border-emerald-800 rounded-lg p-6 text-center" id="dropZone">
                                     <input type="file" id="imageUpload" multiple accept="image/*" class="hidden">
                                     <label for="imageUpload" class="cursor-pointer">
-                                        <i class="fas fa-cloud-upload-alt text-4xl text-rose-400 mb-4"></i>
-                                        <p class="text-rose-600">Arraste suas fotos aqui ou clique para selecionar</p>
-                                        <p class="text-sm text-rose-400 mt-2">Aceita múltiplas imagens (PNG, JPG)</p>
+                                        <i class="fas fa-cloud-upload-alt text-4xl text-emerald-400 dark:text-emerald-500 mb-4"></i>
+                                        <p class="text-emerald-600 dark:text-emerald-400">Arraste suas fotos aqui ou clique para selecionar</p>
+                                        <p class="text-sm text-emerald-400 dark:text-emerald-500 mt-2">Aceita múltiplas imagens (PNG, JPG)</p>
                                     </label>
                                 </div>
                                 <!-- Preview das imagens -->
                                 <div id="imagePreview" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4"></div>
                             </div>
 
-                            <!-- Medidas (opcional) -->
+                            <!-- Medidas -->
                             <div id="measurementsSection" class="hidden">
-                                <label class="block text-rose-800 font-medium mb-2">Medidas (opcional)</label>
+                                <label class="block text-emerald-800 dark:text-emerald-300 font-medium mb-2">Medidas (opcional)</label>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
-                                        <label class="block text-rose-600 text-sm mb-1" for="bust">Busto/Tórax (cm)</label>
-                                        <input type="number" id="bust" name="bust" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500" placeholder="Medida do busto em centímetros">
+                                        <label class="block text-emerald-600 dark:text-emerald-400 text-sm mb-1" for="bust">Busto/Tórax (cm)</label>
+                                        <input type="number" id="bust" name="bust" class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-700 focus:border-emerald-500 dark:focus:border-emerald-700" placeholder="Medida do busto em centímetros">
                                     </div>
                                     <div>
-                                        <label class="block text-rose-600 text-sm mb-1" for="waist">Cintura (cm)</label>
-                                        <input type="number" id="waist" name="waist" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500" placeholder="Medida da cintura em centímetros">
+                                        <label class="block text-emerald-600 dark:text-emerald-400 text-sm mb-1" for="waist">Cintura (cm)</label>
+                                        <input type="number" id="waist" name="waist" class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-700 focus:border-emerald-500 dark:focus:border-emerald-700" placeholder="Medida da cintura em centímetros">
                                     </div>
                                     <div>
-                                        <label class="block text-rose-600 text-sm mb-1" for="hip">Quadril (cm)</label>
-                                        <input type="number" id="hip" name="hip" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500" placeholder="Medida do quadril em centímetros">
+                                        <label class="block text-emerald-600 dark:text-emerald-400 text-sm mb-1" for="hip">Quadril (cm)</label>
+                                        <input type="number" id="hip" name="hip" class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-700 focus:border-emerald-500 dark:focus:border-emerald-700" placeholder="Medida do quadril em centímetros">
                                     </div>
                                 </div>
                             </div>
@@ -282,35 +282,35 @@
                             <!-- Dados de Contato -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label for="name" class="block text-rose-800 font-medium mb-2">Nome Completo *</label>
+                                    <label for="name" class="block text-emerald-800 dark:text-emerald-300 font-medium mb-2">Nome Completo *</label>
                                     <input type="text" id="name" name="name" 
-                                        class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500" required>
+                                        class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-700 focus:border-emerald-500 dark:focus:border-emerald-700" required>
                                 </div>
                                 <div>
-                                    <label for="phone" class="block text-rose-800 font-medium mb-2">Telefone *</label>
+                                    <label for="phone" class="block text-emerald-800 dark:text-emerald-300 font-medium mb-2">Telefone *</label>
                                     <input type="tel" id="phone" name="phone" 
-                                        class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500" required>
+                                        class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-700 focus:border-emerald-500 dark:focus:border-emerald-700" required>
                                 </div>
                             </div>
 
                             <div>
-                                <label for="email" class="block text-rose-800 font-medium mb-2">E-mail *</label>
+                                <label for="email" class="block text-emerald-800 dark:text-emerald-300 font-medium mb-2">E-mail *</label>
                                 <input type="email" id="email" name="email" 
-                                    class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500" required>
+                                    class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-700 focus:border-emerald-500 dark:focus:border-emerald-700" required>
                             </div>
 
                             <!-- Comentários Adicionais -->
                             <div>
-                                <label for="comments" class="block text-rose-800 font-medium mb-2">Comentários Adicionais</label>
+                                <label for="comments" class="block text-emerald-800 dark:text-emerald-300 font-medium mb-2">Comentários Adicionais</label>
                                 <textarea id="comments" name="comments" rows="3" 
-                                    class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
+                                    class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-700 focus:border-emerald-500 dark:focus:border-emerald-700"
                                     placeholder="Informações adicionais importantes sobre seu pedido..."></textarea>
                             </div>
 
                             <!-- Botão de Envio -->
                             <div class="flex justify-center">
                                 <button type="submit" 
-                                    class="px-8 py-4 bg-gradient-to-r from-rose-500 to-rose-600 text-white font-semibold rounded-full hover:from-rose-600 hover:to-rose-700 transition-all duration-300 shadow-lg hover:shadow-xl">
+                                    class="px-8 py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl">
                                     Enviar Solicitação de Orçamento
                                 </button>
                             </div>
@@ -322,14 +322,14 @@
 
         <!-- Modal de Confirmação -->
         <div id="confirmationModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-            <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
+            <div class="bg-white dark:bg-dark-100 rounded-lg p-8 max-w-md mx-4 text-center">
                 <i class="fas fa-check-circle text-6xl text-green-500 mb-4"></i>
-                <h3 class="text-2xl font-bold text-rose-800 mb-4">Solicitação Enviada!</h3>
-                <p class="text-rose-600 mb-6">
+                <h3 class="text-2xl font-bold text-emerald-800 dark:text-emerald-300 mb-4">Solicitação Enviada!</h3>
+                <p class="text-emerald-600 dark:text-emerald-400 mb-6">
                     Obrigado pelo seu interesse! Analisaremos sua solicitação e entraremos em contato em breve com seu orçamento.
                 </p>
                 <button onclick="closeConfirmationModal()" 
-                    class="px-6 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors">
+                    class="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors">
                     Fechar
                 </button>
             </div>
@@ -337,41 +337,41 @@
     </section>
 
     <!-- Services Section -->
-    <section id="services" class="py-20 bg-white">
+    <section id="services" class="py-20 bg-white dark:bg-dark-50">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16">
-                <h2 class="text-4xl font-playfair font-bold text-rose-800 mb-4">Nossos Serviços</h2>
-                <p class="text-rose-600 max-w-2xl mx-auto">Oferecemos soluções personalizadas para todas as suas necessidades de costura</p>
+                <h2 class="text-4xl font-playfair font-bold text-emerald-800 dark:text-emerald-300 mb-4">Nossos Serviços</h2>
+                <p class="text-emerald-600 dark:text-emerald-400 max-w-2xl mx-auto">Oferecemos soluções personalizadas para todas as suas necessidades de costura</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div class="gradient-border">
                     <div class="p-8 h-full">
-                        <div class="text-rose-500 text-4xl mb-6">
+                        <div class="text-emerald-500 dark:text-emerald-400 text-4xl mb-6">
                             <i class="fas fa-tshirt"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-rose-800 mb-4">Ajustes Sob Medida</h3>
-                        <p class="text-rose-700 leading-relaxed">Adaptamos suas peças para um caimento perfeito, respeitando seu estilo e conforto.</p>
+                        <h3 class="text-xl font-bold text-emerald-800 dark:text-emerald-300 mb-4">Ajustes Sob Medida</h3>
+                        <p class="text-emerald-700 dark:text-emerald-400 leading-relaxed">Adaptamos suas peças para um caimento perfeito, respeitando seu estilo e conforto.</p>
                     </div>
                 </div>
                 
                 <div class="gradient-border">
                     <div class="p-8 h-full">
-                        <div class="text-rose-500 text-4xl mb-6">
+                        <div class="text-emerald-500 dark:text-emerald-400 text-4xl mb-6">
                             <i class="fas fa-redo"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-rose-800 mb-4">Reparos Especializados</h3>
-                        <p class="text-rose-700 leading-relaxed">Consertamos e restauramos suas peças favoritas com técnicas profissionais.</p>
+                        <h3 class="text-xl font-bold text-emerald-800 dark:text-emerald-300 mb-4">Reparos Especializados</h3>
+                        <p class="text-emerald-700 dark:text-emerald-400 leading-relaxed">Consertamos e restauramos suas peças favoritas com técnicas profissionais.</p>
                     </div>
                 </div>
                 
                 <div class="gradient-border">
                     <div class="p-8 h-full">
-                        <div class="text-rose-500 text-4xl mb-6">
+                        <div class="text-emerald-500 dark:text-emerald-400 text-4xl mb-6">
                             <i class="fas fa-magic"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-rose-800 mb-4">Customização</h3>
-                        <p class="text-rose-700 leading-relaxed">Transformamos suas ideias em realidade com detalhes únicos e acabamento impecável.</p>
+                        <h3 class="text-xl font-bold text-emerald-800 dark:text-emerald-300 mb-4">Customização</h3>
+                        <p class="text-emerald-700 dark:text-emerald-400 leading-relaxed">Transformamos suas ideias em realidade com detalhes únicos e acabamento impecável.</p>
                     </div>
                 </div>
             </div>
@@ -379,11 +379,11 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-gradient-to-br from-rose-800 to-rose-900 text-white">
+    <section id="contact" class="py-20 bg-gradient-to-br from-emerald-800 to-emerald-900 dark:from-dark-200 dark:to-dark-300 text-white">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16">
                 <h2 class="text-4xl font-playfair font-bold mb-4">Entre em Contato</h2>
-                <p class="text-rose-200 max-w-2xl mx-auto">Estamos aqui para transformar suas ideias em realidade</p>
+                <p class="text-emerald-200 dark:text-emerald-300 max-w-2xl mx-auto">Estamos aqui para transformar suas ideias em realidade</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
@@ -392,26 +392,26 @@
                         <h3 class="text-2xl font-playfair font-bold mb-6">Informações de Contato</h3>
                         <div class="space-y-6">
                             <div class="flex items-start">
-                                <i class="fas fa-map-marker-alt text-rose-300 text-xl mt-1 mr-4"></i>
+                                <i class="fas fa-map-marker-alt text-emerald-300 text-xl mt-1 mr-4"></i>
                                 <div>
                                     <h4 class="font-bold mb-1">Endereço</h4>
-                                    <p class="text-rose-200">Rua Dona Maria Umbelina, 268<br>Taquaral<br>Campinas - SP</p>
+                                    <p class="text-emerald-200 dark:text-emerald-300">Rua Dona Maria Umbelina, 268<br>Taquaral<br>Campinas - SP</p>
                                 </div>
                             </div>
                             
                             <div class="flex items-start">
-                                <i class="fas fa-phone-alt text-rose-300 text-xl mt-1 mr-4"></i>
+                                <i class="fas fa-phone-alt text-emerald-300 text-xl mt-1 mr-4"></i>
                                 <div>
                                     <h4 class="font-bold mb-1">Telefone</h4>
-                                    <p><a href="tel:+5519982751041" class="text-rose-200 hover:text-white transition-colors">(19) 98275-1041</a></p>
+                                    <p><a href="tel:+5519982751041" class="text-emerald-200 dark:text-emerald-300 hover:text-white transition-colors">(19) 98275-1041</a></p>
                                 </div>
                             </div>
                             
                             <div class="flex items-start">
-                                <i class="fas fa-clock text-rose-300 text-xl mt-1 mr-4"></i>
+                                <i class="fas fa-clock text-emerald-300 text-xl mt-1 mr-4"></i>
                                 <div>
                                     <h4 class="font-bold mb-1">Horário de Funcionamento</h4>
-                                    <p class="text-rose-200">Segunda a Sexta: 9h às 18h<br>Sábado: 9h às 13h</p>
+                                    <p class="text-emerald-200 dark:text-emerald-300">Segunda a Sexta: 9h às 18h<br>Sábado: 9h às 13h</p>
                                 </div>
                             </div>
                         </div>
@@ -421,12 +421,12 @@
                         <h4 class="font-bold mb-4">Redes Sociais</h4>
                         <div class="flex space-x-4">
                             <a href="https://instagram.com/atelierosacazetta" target="_blank" rel="noopener noreferrer" 
-                               class="bg-rose-700 hover:bg-rose-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
+                               class="bg-emerald-700 hover:bg-emerald-600 dark:bg-emerald-900 dark:hover:bg-emerald-800 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
                                title="Siga-nos no Instagram">
                                 <i class="fab fa-instagram"></i>
                             </a>
                             <a href="https://wa.me/5519982751041" target="_blank" rel="noopener noreferrer" 
-                               class="bg-rose-700 hover:bg-rose-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
+                               class="bg-emerald-700 hover:bg-emerald-600 dark:bg-emerald-900 dark:hover:bg-emerald-800 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
                                title="Fale conosco no WhatsApp">
                                 <i class="fab fa-whatsapp"></i>
                             </a>
@@ -435,25 +435,25 @@
                 </div>
                 
                 <div class="gradient-border">
-                    <div class="bg-white p-8 rounded-lg">
-                        <h3 class="text-2xl font-playfair font-bold text-rose-800 mb-6">Envie uma Mensagem</h3>
+                    <div class="bg-white dark:bg-dark-100 p-8 rounded-lg">
+                        <h3 class="text-2xl font-playfair font-bold text-emerald-800 dark:text-emerald-300 mb-6">Envie uma Mensagem</h3>
                         <form class="space-y-6">
                             <div>
-                                <label for="name" class="block text-rose-800 font-medium mb-2">Seu Nome</label>
-                                <input type="text" id="name" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
+                                <label for="name" class="block text-emerald-800 dark:text-emerald-300 font-medium mb-2">Seu Nome</label>
+                                <input type="text" id="name" class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-700 focus:border-emerald-500 dark:focus:border-emerald-700">
                             </div>
                             
                             <div>
-                                <label for="email" class="block text-rose-800 font-medium mb-2">Seu E-mail</label>
-                                <input type="email" id="email" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
+                                <label for="email" class="block text-emerald-800 dark:text-emerald-300 font-medium mb-2">Seu E-mail</label>
+                                <input type="email" id="email" class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-700 focus:border-emerald-500 dark:focus:border-emerald-700">
                             </div>
                             
                             <div>
-                                <label for="message" class="block text-rose-800 font-medium mb-2">Mensagem</label>
-                                <textarea id="message" rows="4" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500"></textarea>
+                                <label for="message" class="block text-emerald-800 dark:text-emerald-300 font-medium mb-2">Mensagem</label>
+                                <textarea id="message" rows="4" class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-700 focus:border-emerald-500 dark:focus:border-emerald-700"></textarea>
                             </div>
                             
-                            <button type="submit" class="w-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl">
+                            <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl">
                                 Enviar Mensagem
                             </button>
                         </form>
@@ -464,22 +464,22 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-white py-12">
+    <footer class="bg-white dark:bg-dark-100 py-12">
         <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-8 md:mb-0">
                     <div class="flex items-center mb-4">
                         <img src="atelierosa.png" alt="Rosa Costuras Logo" class="h-12 rounded-lg mr-3">
                         <div>
-                            <h2 class="text-xl font-playfair font-bold text-rose-800">Rosa Costuras</h2>
-                            <p class="text-sm text-rose-600">Costurando sonhos desde 2012</p>
+                            <h2 class="text-xl font-playfair font-bold text-emerald-800 dark:text-emerald-300">Rosa Costuras</h2>
+                            <p class="text-sm text-emerald-600 dark:text-emerald-400">Costurando sonhos desde 2012</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="flex flex-col items-center md:items-end">
-                    <p class="text-rose-600 text-sm mb-2">&copy; 2012 Rosa Costuras. Todos os direitos reservados.</p>
-                    <a href="admin.html" class="text-rose-400 hover:text-rose-600 text-sm transition-colors duration-200">
+                    <p class="text-emerald-600 dark:text-emerald-400 text-sm mb-2">&copy; 2012 Rosa Costuras. Todos os direitos reservados.</p>
+                    <a href="admin.html" class="text-emerald-400 hover:text-emerald-600 dark:text-emerald-500 dark:hover:text-emerald-400 text-sm transition-colors duration-200">
                         <i class="fas fa-lock text-xs mr-1"></i>Área Administrativa
                     </a>
                 </div>
@@ -524,9 +524,9 @@
                                  alt="Exemplo de trabalho" 
                                  class="w-full h-64 object-cover">
                             <div class="p-6">
-                                <h3 class="font-bold text-rose-800 mb-2">Nosso Trabalho</h3>
-                                <p class="text-rose-600 mb-4">Qualidade e dedicação em cada detalhe</p>
-                                <span class="inline-block bg-rose-100 text-rose-800 text-xs px-3 py-1 rounded-full">
+                                <h3 class="font-bold text-emerald-800 mb-2">Nosso Trabalho</h3>
+                                <p class="text-emerald-600 mb-4">Qualidade e dedicação em cada detalhe</p>
+                                <span class="inline-block bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full">
                                     Exemplo
                                 </span>
                             </div>
@@ -541,9 +541,9 @@
                                  alt="${item.title}" 
                                  class="w-full h-64 object-cover">
                             <div class="p-6">
-                                <h3 class="font-bold text-rose-800 mb-2">${item.title}</h3>
-                                <p class="text-rose-600 mb-4">${item.description}</p>
-                                <span class="inline-block bg-rose-100 text-rose-800 text-xs px-3 py-1 rounded-full">
+                                <h3 class="font-bold text-emerald-800 mb-2">${item.title}</h3>
+                                <p class="text-emerald-600 mb-4">${item.description}</p>
+                                <span class="inline-block bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full">
                                     ${item.category === 'new' ? 'Lançamento' : 'Novidade'}
                                 </span>
                             </div>
