@@ -35,12 +35,52 @@
         .font-poppins { font-family: 'Poppins', sans-serif; }
         
         .gallery-item {
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
         }
+
         .gallery-item:hover {
-            transform: scale(1.03);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
         }
+
+        .gallery-item img {
+            transition: all 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-item .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 2rem 1.5rem;
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover .overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            }
+        }
+
         .category-btn.active {
             background-color: #34d399;
             color: white;
@@ -89,6 +129,91 @@
 
         .dark .gradient-border {
             background: linear-gradient(45deg, #065f46, #047857, #059669);
+        }
+
+        /* Image Modal Styles */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            cursor: zoom-out;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90vh;
+            margin-top: 2.5vh;
+            animation: zoom 0.3s ease-in-out;
+        }
+
+        @keyframes zoom {
+            from {transform:scale(0.95); opacity: 0;}
+            to {transform:scale(1); opacity: 1;}
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .modal-close:hover {
+            color: #bbb;
+        }
+
+        .modal-navigation {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+        }
+
+        .modal-navigation:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-prev {
+            left: 15px;
+        }
+
+        .modal-next {
+            right: 15px;
+        }
+
+        @media only screen and (max-width: 700px) {
+            .modal-content {
+                max-width: 100%;
+                max-height: 80vh;
+                margin-top: 10vh;
+            }
+            .modal-navigation {
+                padding: 8px;
+                font-size: 18px;
+            }
         }
     </style>
 </head>
@@ -189,7 +314,7 @@
                 </button>
             </div>
             
-            <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div id="galleryGrid" class="gallery-grid">
                 <!-- Photos will be loaded dynamically -->
             </div>
         </div>
@@ -487,7 +612,59 @@
         </div>
     </footer>
 
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+        <span class="modal-close" onclick="closeImageModal()">&times;</span>
+        <img id="modalImage" class="modal-content">
+        <div class="modal-navigation modal-prev" onclick="changeImage(-1); event.stopPropagation();">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+        <div class="modal-navigation modal-next" onclick="changeImage(1); event.stopPropagation();">
+            <i class="fas fa-chevron-right"></i>
+        </div>
+    </div>
+
     <script>
+        // Load gallery items
+        function loadGalleryItems() {
+            const galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
+            const grid = document.getElementById('galleryGrid');
+            
+            if (galleryItems.length === 0) {
+                grid.innerHTML = `
+                    <div class="gallery-item new" data-category="new">
+                        <img src="atelie.jpg" 
+                             alt="Exemplo de trabalho" 
+                             class="w-full h-[400px] object-cover cursor-pointer"
+                             onclick="openImageModal(this, 0)">
+                        <div class="overlay">
+                            <h3 class="font-bold text-white text-xl mb-2">Nosso Trabalho</h3>
+                            <p class="text-gray-200 mb-4">Qualidade e dedicação em cada detalhe</p>
+                            <span class="inline-block bg-emerald-500/50 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm">
+                                Exemplo
+                            </span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                grid.innerHTML = galleryItems.map((item, index) => `
+                    <div class="gallery-item ${item.category}" data-category="${item.category}">
+                        <img src="${item.image}" 
+                             alt="${item.title}" 
+                             class="w-full h-[400px] object-cover cursor-pointer"
+                             onclick="openImageModal(this, ${index})">
+                        <div class="overlay">
+                            <h3 class="font-bold text-white text-xl mb-2">${item.title}</h3>
+                            <p class="text-gray-200 mb-4">${item.description}</p>
+                            <span class="inline-block bg-emerald-500/50 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm">
+                                ${item.category === 'new' ? 'Lançamento' : 'Novidade'}
+                            </span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
         // Gallery Filter Function
         function filterGallery(category) {
             const items = document.querySelectorAll('.gallery-item');
@@ -503,54 +680,21 @@
             });
             
             items.forEach(item => {
+                const element = item;
                 if (category === 'all' || item.dataset.category === category) {
-                    item.style.display = 'block';
+                    element.style.display = 'block';
+                    setTimeout(() => {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }, 50);
                 } else {
-                    item.style.display = 'none';
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        element.style.display = 'none';
+                    }, 400);
                 }
             });
-        }
-
-        // Load gallery items
-        function loadGalleryItems() {
-            const galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
-            const grid = document.getElementById('galleryGrid');
-            
-            if (galleryItems.length === 0) {
-                grid.innerHTML = `
-                    <div class="gallery-item new" data-category="new">
-                        <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-                            <img src="atelierosa.png" 
-                                 alt="Exemplo de trabalho" 
-                                 class="w-full h-64 object-cover">
-                            <div class="p-6">
-                                <h3 class="font-bold text-emerald-800 mb-2">Nosso Trabalho</h3>
-                                <p class="text-emerald-600 mb-4">Qualidade e dedicação em cada detalhe</p>
-                                <span class="inline-block bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full">
-                                    Exemplo
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else {
-                grid.innerHTML = galleryItems.map(item => `
-                    <div class="gallery-item ${item.category}" data-category="${item.category}">
-                        <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-                            <img src="${item.image}" 
-                                 alt="${item.title}" 
-                                 class="w-full h-64 object-cover">
-                            <div class="p-6">
-                                <h3 class="font-bold text-emerald-800 mb-2">${item.title}</h3>
-                                <p class="text-emerald-600 mb-4">${item.description}</p>
-                                <span class="inline-block bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full">
-                                    ${item.category === 'new' ? 'Lançamento' : 'Novidade'}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            }
         }
 
         // Initialize gallery
@@ -743,6 +887,56 @@
                 !mobileMenu.contains(e.target) && 
                 !mobileMenuBtn.contains(e.target)) {
                 toggleMobileMenu();
+            }
+        });
+
+        // Image Modal Functionality
+        let currentImageIndex = 0;
+        let galleryImages = [];
+
+        function openImageModal(image, index) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            
+            // Update current image index and gallery images array
+            currentImageIndex = index;
+            galleryImages = Array.from(document.querySelectorAll('.gallery-item img'));
+            
+            modal.style.display = 'block';
+            modalImg.src = image.src;
+            modalImg.alt = image.alt;
+            
+            // Prevent scrolling when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.style.display = 'none';
+            
+            // Restore scrolling
+            document.body.style.overflow = 'auto';
+        }
+
+        function changeImage(direction) {
+            currentImageIndex = (currentImageIndex + direction + galleryImages.length) % galleryImages.length;
+            const newImage = galleryImages[currentImageIndex];
+            const modalImg = document.getElementById('modalImage');
+            
+            modalImg.style.opacity = '0';
+            setTimeout(() => {
+                modalImg.src = newImage.src;
+                modalImg.alt = newImage.alt;
+                modalImg.style.opacity = '1';
+            }, 200);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (document.getElementById('imageModal').style.display === 'block') {
+                if (e.key === 'Escape') closeImageModal();
+                if (e.key === 'ArrowLeft') changeImage(-1);
+                if (e.key === 'ArrowRight') changeImage(1);
             }
         });
     </script>
