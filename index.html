@@ -100,44 +100,28 @@
         </div>
     </section>
 
-    <!-- Services Section -->
-    <section id="services" class="py-20 bg-white">
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20 bg-rose-50">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16">
-                <h2 class="text-4xl font-playfair font-bold text-rose-800 mb-4">Nossos Serviços</h2>
-                <p class="text-rose-600 max-w-2xl mx-auto">Oferecemos soluções personalizadas para todas as suas necessidades de costura</p>
+                <h2 class="text-4xl font-playfair font-bold text-rose-800 mb-4">Nossa Galeria</h2>
+                <p class="text-rose-600 max-w-2xl mx-auto">Conheça alguns dos nossos trabalhos e transformações</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="gradient-border">
-                    <div class="p-8 h-full">
-                        <div class="text-rose-500 text-4xl mb-6">
-                            <i class="fas fa-tshirt"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-rose-800 mb-4">Ajustes Sob Medida</h3>
-                        <p class="text-rose-700 leading-relaxed">Adaptamos suas peças para um caimento perfeito, respeitando seu estilo e conforto.</p>
-                    </div>
-                </div>
-                
-                <div class="gradient-border">
-                    <div class="p-8 h-full">
-                        <div class="text-rose-500 text-4xl mb-6">
-                            <i class="fas fa-redo"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-rose-800 mb-4">Reparos Especializados</h3>
-                        <p class="text-rose-700 leading-relaxed">Consertamos e restauramos suas peças favoritas com técnicas profissionais.</p>
-                    </div>
-                </div>
-                
-                <div class="gradient-border">
-                    <div class="p-8 h-full">
-                        <div class="text-rose-500 text-4xl mb-6">
-                            <i class="fas fa-magic"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-rose-800 mb-4">Customização</h3>
-                        <p class="text-rose-700 leading-relaxed">Transformamos suas ideias em realidade com detalhes únicos e acabamento impecável.</p>
-                    </div>
-                </div>
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button onclick="filterGallery('all')" class="category-btn active px-6 py-2 rounded-full font-medium transition-all duration-300 bg-rose-100 text-rose-700 hover:bg-rose-200">
+                    <i class="fas fa-th-large mr-2"></i>Todos
+                </button>
+                <button onclick="filterGallery('new')" class="category-btn px-6 py-2 rounded-full font-medium transition-all duration-300 bg-rose-100 text-rose-700 hover:bg-rose-200">
+                    <i class="fas fa-star mr-2"></i>Lançamentos
+                </button>
+                <button onclick="filterGallery('novelty')" class="category-btn px-6 py-2 rounded-full font-medium transition-all duration-300 bg-rose-100 text-rose-700 hover:bg-rose-200">
+                    <i class="fas fa-lightbulb mr-2"></i>Novidades
+                </button>
+            </div>
+            
+            <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                <!-- Photos will be loaded dynamically -->
             </div>
         </div>
     </section>
@@ -172,8 +156,8 @@
 
                                 <!-- Tipo de Reparo (aparece apenas quando "Reparos" é selecionado) -->
                                 <div id="repairTypes" class="hidden">
-                                    <label class="block text-rose-800 font-medium mb-2">Tipo de Reparo</label>
-                                    <select name="repairType" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
+                                    <label class="block text-rose-800 font-medium mb-2" for="repairType">Tipo de Reparo</label>
+                                    <select id="repairType" name="repairType" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500" title="Selecione o tipo de reparo">
                                         <option value="">Selecione o tipo de reparo...</option>
                                         <option value="bainha">Ajuste de Bainha</option>
                                         <option value="zipper">Troca de Zíper</option>
@@ -212,16 +196,16 @@
                                 <label class="block text-rose-800 font-medium mb-2">Medidas (opcional)</label>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
-                                        <label class="block text-rose-600 text-sm mb-1">Busto/Tórax (cm)</label>
-                                        <input type="number" name="bust" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
+                                        <label class="block text-rose-600 text-sm mb-1" for="bust">Busto/Tórax (cm)</label>
+                                        <input type="number" id="bust" name="bust" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500" placeholder="Medida do busto em centímetros">
                                     </div>
                                     <div>
-                                        <label class="block text-rose-600 text-sm mb-1">Cintura (cm)</label>
-                                        <input type="number" name="waist" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
+                                        <label class="block text-rose-600 text-sm mb-1" for="waist">Cintura (cm)</label>
+                                        <input type="number" id="waist" name="waist" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500" placeholder="Medida da cintura em centímetros">
                                     </div>
                                     <div>
-                                        <label class="block text-rose-600 text-sm mb-1">Quadril (cm)</label>
-                                        <input type="number" name="hip" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
+                                        <label class="block text-rose-600 text-sm mb-1" for="hip">Quadril (cm)</label>
+                                        <input type="number" id="hip" name="hip" class="w-full px-4 py-2 rounded-lg border border-rose-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500" placeholder="Medida do quadril em centímetros">
                                     </div>
                                 </div>
                             </div>
@@ -283,28 +267,44 @@
         </div>
     </section>
 
-    <!-- Gallery Section -->
-    <section id="gallery" class="py-20 bg-rose-50">
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-white">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16">
-                <h2 class="text-4xl font-playfair font-bold text-rose-800 mb-4">Nossa Galeria</h2>
-                <p class="text-rose-600 max-w-2xl mx-auto">Conheça alguns dos nossos trabalhos e transformações</p>
+                <h2 class="text-4xl font-playfair font-bold text-rose-800 mb-4">Nossos Serviços</h2>
+                <p class="text-rose-600 max-w-2xl mx-auto">Oferecemos soluções personalizadas para todas as suas necessidades de costura</p>
             </div>
             
-            <div class="flex flex-wrap justify-center gap-4 mb-12">
-                <button onclick="filterGallery('all')" class="category-btn active px-6 py-2 rounded-full font-medium transition-all duration-300 bg-rose-100 text-rose-700 hover:bg-rose-200">
-                    <i class="fas fa-th-large mr-2"></i>Todos
-                </button>
-                <button onclick="filterGallery('new')" class="category-btn px-6 py-2 rounded-full font-medium transition-all duration-300 bg-rose-100 text-rose-700 hover:bg-rose-200">
-                    <i class="fas fa-star mr-2"></i>Lançamentos
-                </button>
-                <button onclick="filterGallery('novelty')" class="category-btn px-6 py-2 rounded-full font-medium transition-all duration-300 bg-rose-100 text-rose-700 hover:bg-rose-200">
-                    <i class="fas fa-lightbulb mr-2"></i>Novidades
-                </button>
-            </div>
-            
-            <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                <!-- Photos will be loaded dynamically -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="gradient-border">
+                    <div class="p-8 h-full">
+                        <div class="text-rose-500 text-4xl mb-6">
+                            <i class="fas fa-tshirt"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-rose-800 mb-4">Ajustes Sob Medida</h3>
+                        <p class="text-rose-700 leading-relaxed">Adaptamos suas peças para um caimento perfeito, respeitando seu estilo e conforto.</p>
+                    </div>
+                </div>
+                
+                <div class="gradient-border">
+                    <div class="p-8 h-full">
+                        <div class="text-rose-500 text-4xl mb-6">
+                            <i class="fas fa-redo"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-rose-800 mb-4">Reparos Especializados</h3>
+                        <p class="text-rose-700 leading-relaxed">Consertamos e restauramos suas peças favoritas com técnicas profissionais.</p>
+                    </div>
+                </div>
+                
+                <div class="gradient-border">
+                    <div class="p-8 h-full">
+                        <div class="text-rose-500 text-4xl mb-6">
+                            <i class="fas fa-magic"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-rose-800 mb-4">Customização</h3>
+                        <p class="text-rose-700 leading-relaxed">Transformamos suas ideias em realidade com detalhes únicos e acabamento impecável.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -487,13 +487,86 @@
         // Initialize gallery
         loadGalleryItems();
         
-        // Form submission
-        document.querySelector('form').addEventListener('submit', function(e) {
+        // Manipulação do formulário de orçamento
+        document.getElementById('quoteForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            // Preparar os dados do formulário
+            const formData = new FormData(this);
+            const serviceType = formData.get('serviceType');
+            const description = formData.get('description');
+            const name = formData.get('name');
+            const phone = formData.get('phone');
+            const email = formData.get('email');
+            const comments = formData.get('comments');
+
+            // Preparar o corpo do email
+            const emailBody = `
+                Nova Solicitação de Orçamento:
+                
+                Nome: ${name}
+                Telefone: ${phone}
+                Email: ${email}
+                
+                Tipo de Serviço: ${serviceType === 'repair' ? 'Reparos e Ajustes' : 'Confecção Personalizada'}
+                ${serviceType === 'repair' ? `Tipo de Reparo: ${formData.get('repairType')}` : ''}
+                
+                Descrição: ${description}
+                
+                ${comments ? `Comentários Adicionais: ${comments}` : ''}
+                
+                ${formData.get('bust') ? `
+                Medidas:
+                Busto: ${formData.get('bust')} cm
+                Cintura: ${formData.get('waist')} cm
+                Quadril: ${formData.get('hip')} cm
+                ` : ''}
+            `;
+
+            // Enviar email usando mailto
+            const mailtoLink = `mailto:rcazetta@gmail.com?subject=Nova Solicitação de Orçamento - ${name}&body=${encodeURIComponent(emailBody)}`;
+            window.location.href = mailtoLink;
+
+            // Mostrar modal de confirmação
+            document.getElementById('confirmationModal').classList.remove('hidden');
+            this.reset();
+            imagePreview.innerHTML = '';
+        });
+
+        // Manipulação do formulário de contato
+        document.querySelector('#contact form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Preparar os dados do formulário
+            const name = this.querySelector('#name').value;
+            const email = this.querySelector('#email').value;
+            const message = this.querySelector('#message').value;
+
+            // Preparar o corpo do email
+            const emailBody = `
+                Nova Mensagem de Contato:
+                
+                Nome: ${name}
+                Email: ${email}
+                
+                Mensagem:
+                ${message}
+            `;
+
+            // Enviar email usando mailto
+            const mailtoLink = `mailto:rcazetta@gmail.com?subject=Nova Mensagem de Contato - ${name}&body=${encodeURIComponent(emailBody)}`;
+            window.location.href = mailtoLink;
+
+            // Mostrar confirmação e limpar formulário
             alert('Mensagem enviada com sucesso! Responderemos em breve.');
             this.reset();
         });
-        
+
+        // Função para fechar o modal de confirmação
+        function closeConfirmationModal() {
+            document.getElementById('confirmationModal').classList.add('hidden');
+        }
+
         // Mobile menu
         document.querySelector('.md\\:hidden').addEventListener('click', function() {
             // Implementação do menu mobile seria aqui
@@ -561,22 +634,6 @@
                 .filter(file => file.type.startsWith('image/'))
                 .forEach(addImagePreview);
         });
-
-        // Manipulação do formulário
-        document.getElementById('quoteForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Aqui você adicionaria a lógica para enviar os dados para o servidor
-            // Por enquanto, apenas mostraremos o modal de confirmação
-            document.getElementById('confirmationModal').classList.remove('hidden');
-            this.reset();
-            imagePreview.innerHTML = '';
-        });
-
-        // Função para fechar o modal de confirmação
-        function closeConfirmationModal() {
-            document.getElementById('confirmationModal').classList.add('hidden');
-        }
     </script>
 </body>
 </html>
