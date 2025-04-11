@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,29 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            50: '#1a1a1a',
+                            100: '#2d2d2d',
+                            200: '#404040',
+                            300: '#595959',
+                            400: '#737373',
+                            500: '#8c8c8c',
+                            600: '#a6a6a6',
+                            700: '#bfbfbf',
+                            800: '#d9d9d9',
+                            900: '#f2f2f2',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         .font-playfair { font-family: 'Playfair Display', serif; }
         .font-poppins { font-family: 'Poppins', sans-serif; }
@@ -40,32 +63,78 @@
             border-radius: 0.4rem;
         }
 
+        .dark .gradient-border > div {
+            background: #2d2d2d;
+        }
+
         .modern-shadow {
             box-shadow: 0 10px 30px -5px rgba(251, 113, 133, 0.2);
         }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        /* Dark mode specific styles */
+        .dark body {
+            background-color: #1a1a1a;
+            color: #f2f2f2;
+        }
+
+        .dark .gradient-border {
+            background: linear-gradient(45deg, #831843, #be185d, #db2777);
+        }
     </style>
 </head>
-<body class="bg-rose-50 font-poppins">
+<body class="bg-rose-50 font-poppins dark:bg-dark-50">
     <!-- Header -->
-    <header class="bg-white shadow-lg sticky top-0 z-50">
+    <header class="bg-white shadow-lg sticky top-0 z-50 dark:bg-dark-100">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <img src="atelierosa.png" alt="Rosa Costuras Logo" class="h-16 rounded-lg">
+                <img src="atelierosa.png" alt="Rosa Costuras Logo" class="h-12 md:h-16 rounded-lg">
                 <div>
-                    <h1 class="text-3xl font-playfair font-bold text-rose-800">Rosa Costuras</h1>
-                    <p class="text-sm text-rose-600 tracking-wide">ATELIÊ DE COSTURA CRIATIVA</p>
+                    <h1 class="text-2xl md:text-3xl font-playfair font-bold text-rose-800 dark:text-rose-300">Rosa Costuras</h1>
+                    <p class="text-xs md:text-sm text-rose-600 dark:text-rose-400 tracking-wide">ATELIÊ DE COSTURA CRIATIVA</p>
                 </div>
             </div>
-            <nav class="hidden md:flex space-x-8">
-                <a href="#home" class="text-rose-700 hover:text-rose-500 font-medium transition-colors duration-200">Início</a>
-                <a href="#gallery" class="text-rose-700 hover:text-rose-500 font-medium transition-colors duration-200">Galeria</a>
-                <a href="#services" class="text-rose-700 hover:text-rose-500 font-medium transition-colors duration-200">Serviços</a>
 
-                <a href="#contact" class="text-rose-700 hover:text-rose-500 font-medium transition-colors duration-200">Contato</a>
+            <!-- Dark Mode Toggle -->
+            <button id="darkModeToggle" class="p-2 rounded-full hover:bg-rose-100 dark:hover:bg-dark-200 transition-colors" title="Alternar modo escuro">
+                <i class="fas fa-moon dark:hidden text-rose-600"></i>
+                <i class="fas fa-sun hidden dark:block text-rose-300"></i>
+            </button>
+
+            <nav class="hidden md:flex space-x-8">
+                <a href="#home" class="text-rose-700 dark:text-rose-300 hover:text-rose-500 dark:hover:text-rose-400 font-medium transition-colors duration-200">Início</a>
+                <a href="#gallery" class="text-rose-700 dark:text-rose-300 hover:text-rose-500 dark:hover:text-rose-400 font-medium transition-colors duration-200">Galeria</a>
+                <a href="#services" class="text-rose-700 dark:text-rose-300 hover:text-rose-500 dark:hover:text-rose-400 font-medium transition-colors duration-200">Serviços</a>
+                <a href="#contact" class="text-rose-700 dark:text-rose-300 hover:text-rose-500 dark:hover:text-rose-400 font-medium transition-colors duration-200">Contato</a>
             </nav>
-            <button class="md:hidden text-rose-700" title="Abrir Menu">
+
+            <button id="mobileMenuBtn" class="md:hidden text-rose-700 dark:text-rose-300" title="Abrir Menu">
                 <i class="fas fa-bars text-2xl"></i>
             </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="mobile-menu fixed top-0 left-0 h-full w-64 bg-white dark:bg-dark-100 shadow-lg z-50 md:hidden">
+            <div class="p-6">
+                <button id="closeMenuBtn" class="mb-8 text-rose-700 dark:text-rose-300" title="Fechar Menu">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+                <nav class="flex flex-col space-y-4">
+                    <a href="#home" class="text-rose-700 dark:text-rose-300 hover:text-rose-500 dark:hover:text-rose-400 font-medium">Início</a>
+                    <a href="#gallery" class="text-rose-700 dark:text-rose-300 hover:text-rose-500 dark:hover:text-rose-400 font-medium">Galeria</a>
+                    <a href="#services" class="text-rose-700 dark:text-rose-300 hover:text-rose-500 dark:hover:text-rose-400 font-medium">Serviços</a>
+                    <a href="#contact" class="text-rose-700 dark:text-rose-300 hover:text-rose-500 dark:hover:text-rose-400 font-medium">Contato</a>
+                </nav>
+            </div>
         </div>
     </header>
 
@@ -351,7 +420,7 @@
                     <div>
                         <h4 class="font-bold mb-4">Redes Sociais</h4>
                         <div class="flex space-x-4">
-                            <a href="https://instagram.com/rosacosturas" target="_blank" rel="noopener noreferrer" 
+                            <a href="https://instagram.com/atelierosacazetta" target="_blank" rel="noopener noreferrer" 
                                class="bg-rose-700 hover:bg-rose-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
                                title="Siga-nos no Instagram">
                                 <i class="fab fa-instagram"></i>
@@ -633,6 +702,48 @@
             Array.from(e.dataTransfer.files)
                 .filter(file => file.type.startsWith('image/'))
                 .forEach(addImagePreview);
+        });
+
+        // Dark mode functionality
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const html = document.documentElement;
+
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'true' || 
+            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.setItem('darkMode', html.classList.contains('dark'));
+        });
+
+        // Mobile menu functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuLinks = mobileMenu.getElementsByTagName('a');
+
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('active');
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+        closeMenuBtn.addEventListener('click', toggleMobileMenu);
+
+        // Close menu when clicking a link
+        Array.from(mobileMenuLinks).forEach(link => {
+            link.addEventListener('click', toggleMobileMenu);
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (mobileMenu.classList.contains('active') && 
+                !mobileMenu.contains(e.target) && 
+                !mobileMenuBtn.contains(e.target)) {
+                toggleMobileMenu();
+            }
         });
     </script>
 </body>
