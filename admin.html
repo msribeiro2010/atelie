@@ -1,65 +1,224 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rosa Costuras - Admin</title>
+    <title>Área Administrativa - Rosa Costuras</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            50: '#1a1a1a',
+                            100: '#2d2d2d',
+                            200: '#404040'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        .font-poppins { font-family: 'Poppins', sans-serif; }
+        
+        .gallery-item {
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            background-color: rgba(0, 0, 0, 0.1);
+            aspect-ratio: 3/4;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.5s ease;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .drag-over {
+            border-color: #34d399 !important;
+            background-color: rgba(52, 211, 153, 0.1);
+        }
+    </style>
 </head>
-<body class="bg-rose-50">
-    <div class="min-h-screen flex items-center justify-center">
-        <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-            <div class="text-center mb-8">
-                <i class="fas fa-scissors text-4xl text-rose-500 mb-4"></i>
-                <h1 class="text-2xl font-bold text-rose-800">Rosa Costuras</h1>
-                <p class="text-rose-600">Painel Administrativo</p>
+<body class="bg-emerald-50 font-poppins dark:bg-dark-50">
+    <!-- Header -->
+    <header class="bg-white shadow-lg dark:bg-dark-100">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300">
+                    <i class="fas fa-arrow-left mr-2"></i>Voltar ao site
+                </a>
+            </div>
+            <h1 class="text-2xl font-playfair font-bold text-emerald-800 dark:text-emerald-300">Área Administrativa</h1>
+            <button id="darkModeToggle" class="p-2 rounded-full hover:bg-emerald-100 dark:hover:bg-dark-200 transition-colors">
+                <i class="fas fa-moon dark:hidden text-emerald-600"></i>
+                <i class="fas fa-sun hidden dark:block text-emerald-300"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12">
+        <!-- Gallery Management -->
+        <section class="mb-12">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-playfair font-bold text-emerald-800 dark:text-emerald-300">Gerenciar Galeria</h2>
+                <button onclick="clearGallery()" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                    <i class="fas fa-trash-alt mr-2"></i>Limpar Galeria
+                </button>
             </div>
 
-            <form id="loginForm" class="space-y-6">
-                <div>
-                    <label for="username" class="block text-rose-700 font-medium mb-2">Usuário</label>
-                    <input type="text" id="username" class="w-full px-4 py-2 border border-rose-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
+            <!-- Upload Area -->
+            <div class="mb-8">
+                <div id="dropZone" class="border-2 border-dashed border-emerald-300 dark:border-emerald-700 rounded-lg p-8 text-center cursor-pointer hover:border-emerald-400 dark:hover:border-emerald-600 transition-colors">
+                    <input type="file" id="imageUpload" multiple accept="image/*" class="hidden">
+                    <i class="fas fa-cloud-upload-alt text-5xl text-emerald-400 dark:text-emerald-600 mb-4"></i>
+                    <h3 class="text-xl font-medium text-emerald-700 dark:text-emerald-300 mb-2">Arraste imagens aqui</h3>
+                    <p class="text-emerald-600 dark:text-emerald-400">ou</p>
+                    <button onclick="document.getElementById('imageUpload').click()" class="mt-4 px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors">
+                        Selecionar Arquivos
+                    </button>
+                    <p class="text-sm text-emerald-500 dark:text-emerald-400 mt-4">Formatos aceitos: JPG, PNG, JPEG</p>
                 </div>
+            </div>
 
-                <div>
-                    <label for="password" class="block text-rose-700 font-medium mb-2">Senha</label>
-                    <input type="password" id="password" class="w-full px-4 py-2 border border-rose-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
-                </div>
-
-                <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
-                    Entrar
-                </button>
-            </form>
-
-            <div id="errorMessage" class="mt-4 text-red-600 text-center hidden"></div>
-        </div>
-    </div>
+            <!-- Gallery Grid -->
+            <div id="galleryGrid" class="gallery-grid">
+                <!-- Images will be loaded here -->
+            </div>
+        </section>
+    </main>
 
     <script>
-        // Credenciais de exemplo (em produção, isso deve ser feito no servidor)
-        const ADMIN_CREDENTIALS = {
-            username: 'admin',
-            password: 'admin123'
-        };
+        // Dark mode functionality
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const html = document.documentElement;
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('errorMessage');
+        if (localStorage.getItem('darkMode') === 'true' || 
+            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        }
 
-            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-                // Armazena o token de autenticação
-                localStorage.setItem('adminAuthenticated', 'true');
-                // Redireciona para o dashboard
-                window.location.href = 'admin-dashboard.html';
-            } else {
-                errorMessage.textContent = 'Usuário ou senha incorretos';
-                errorMessage.classList.remove('hidden');
-            }
+        darkModeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.setItem('darkMode', html.classList.contains('dark'));
         });
+
+        // Gallery Management
+        function loadGalleryItems() {
+            const grid = document.getElementById('galleryGrid');
+            let galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
+            
+            grid.innerHTML = galleryItems.map((item, index) => `
+                <div class="gallery-item" data-index="${index}">
+                    <img src="${item.image}" 
+                         alt="${item.title}"
+                         class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity p-4 flex flex-col">
+                        <input type="text" value="${item.title}" 
+                               class="bg-transparent border-b border-white text-white mb-2 px-2"
+                               onchange="updateItem(${index}, 'title', this.value)">
+                        <textarea class="bg-transparent border-b border-white text-white mb-2 px-2 flex-grow"
+                                  onchange="updateItem(${index}, 'description', this.value)">${item.description}</textarea>
+                        <select class="bg-black bg-opacity-50 text-white mb-4 px-2 py-1 rounded"
+                                onchange="updateItem(${index}, 'category', this.value)">
+                            <option value="new" ${item.category === 'new' ? 'selected' : ''}>Lançamento</option>
+                            <option value="novelty" ${item.category === 'novelty' ? 'selected' : ''}>Novidade</option>
+                        </select>
+                        <button onclick="deleteItem(${index})" 
+                                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">
+                            <i class="fas fa-trash-alt mr-2"></i>Excluir
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateItem(index, field, value) {
+            let galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
+            if (galleryItems[index]) {
+                galleryItems[index][field] = value;
+                localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
+            }
+        }
+
+        function deleteItem(index) {
+            if (confirm('Tem certeza que deseja excluir esta imagem?')) {
+                let galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
+                galleryItems.splice(index, 1);
+                localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
+                loadGalleryItems();
+            }
+        }
+
+        function clearGallery() {
+            if (confirm('Tem certeza que deseja limpar toda a galeria? Esta ação não pode ser desfeita.')) {
+                localStorage.removeItem('galleryItems');
+                loadGalleryItems();
+            }
+        }
+
+        // File Upload Handling
+        const dropZone = document.getElementById('dropZone');
+        const imageUpload = document.getElementById('imageUpload');
+
+        function handleFiles(files) {
+            Array.from(files).forEach(file => {
+                if (!file.type.startsWith('image/')) return;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const newItem = {
+                        image: e.target.result,
+                        title: 'Nova Imagem',
+                        description: 'Descrição da imagem',
+                        category: 'new'
+                    };
+
+                    let galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
+                    galleryItems.push(newItem);
+                    localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
+                    loadGalleryItems();
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        imageUpload.addEventListener('change', (e) => handleFiles(e.target.files));
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        // Initialize gallery
+        loadGalleryItems();
     </script>
 </body>
 </html> 
