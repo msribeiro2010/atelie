@@ -763,16 +763,18 @@
                 galleryItems = galleryItems.filter(item => {
                     const img = new Image();
                     img.src = item.image;
-                    return img.complete || (img.width + img.height) > 0;
+                    return true; // Remove a validação que estava causando problemas
                 });
 
-                // Se não houver imagens válidas, usa as padrão
+                // Se não houver imagens, usa as padrão
                 if (galleryItems.length === 0) {
                     galleryItems = defaultGalleryItems;
+                    localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
                 }
             } catch (e) {
                 console.warn('Erro ao carregar galeria:', e);
                 galleryItems = defaultGalleryItems;
+                localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
             }
 
             // Renderiza a galeria
@@ -787,9 +789,16 @@
                     <div class="overlay">
                         <h3 class="font-bold text-white text-xl mb-2">${item.title}</h3>
                         <p class="text-gray-200 mb-4">${item.description}</p>
-                        <span class="inline-block bg-emerald-500/50 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm">
-                            ${item.category === 'new' ? 'Lançamento' : 'Novidade'}
-                        </span>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="inline-block bg-emerald-500/50 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm">
+                                ${item.category === 'new' ? 'Lançamento' : 'Novidade'}
+                            </span>
+                            ${item.price ? `
+                            <span class="text-white font-semibold">
+                                R$ ${item.price}
+                            </span>
+                            ` : ''}
+                        </div>
                     </div>
                 </div>
             `).join('');
