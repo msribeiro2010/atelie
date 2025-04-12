@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js"></script>
+    <script src="js/config.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -167,84 +169,166 @@
     </div>
 
     <script>
-        // Login handling
-        const ADMIN_CREDENTIALS = {
-            username: 'admin',
-            password: 'rosa2024'
-        };
-
-        // Função para gerar um token de sessão
-        function generateSessionToken() {
-            return Math.random().toString(36).substring(2) + Date.now().toString(36);
-        }
-
-        // Função para verificar se o token ainda é válido (24 horas)
-        function isTokenValid(token) {
-            if (!token) return false;
-            const [timestamp] = token.split('_');
-            const tokenDate = new Date(parseInt(timestamp));
-            const now = new Date();
-            const hours = Math.abs(now - tokenDate) / 36e5; // Diferença em horas
-            return hours < 24;
-        }
-
-        // Check if already logged in
-        function checkAuth() {
-            const sessionToken = localStorage.getItem('adminSessionToken');
-            const isAuthenticated = isTokenValid(sessionToken);
-            
-            if (!isAuthenticated) {
-                // Limpa dados da sessão expirada
-                localStorage.removeItem('adminSessionToken');
-                localStorage.removeItem('adminAuthenticated');
+        // Verifica autenticação antes de qualquer operação
+        async function checkAuth() {
+            const token = AppUtils.auth.getAuthToken();
+            if (!token || !AppUtils.auth.isTokenValid(token)) {
+                AppUtils.auth.removeAuthToken();
+                showLoginForm();
+                return false;
             }
-
-            document.getElementById('loginSection').style.display = isAuthenticated ? 'none' : 'flex';
-            document.getElementById('adminContent').style.display = isAuthenticated ? 'block' : 'none';
-            
-            if (isAuthenticated) {
-                loadGalleryItems();
-            }
+            return true;
         }
 
-        // Handle login form submission
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        // Login seguro
+        async function handleLogin(e) {
             e.preventDefault();
-            const username = document.getElementById('username').value;
+            const username = DOMPurify.sanitize(document.getElementById('username').value);
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('loginError');
 
-            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-                // Gera token de sessão com timestamp
-                const timestamp = Date.now();
-                const token = `${timestamp}_${generateSessionToken()}`;
-                localStorage.setItem('adminSessionToken', token);
-                localStorage.setItem('adminAuthenticated', 'true');
-                checkAuth();
+            try {
+                // Hash da senha antes de comparar
+                const hashedPassword = await AppUtils.auth.hashPassword(password);
                 
-                // Limpa os campos do formulário
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
-            } else {
-                errorDiv.textContent = 'Usuário ou senha incorretos';
+                // Em produção, isso seria uma chamada API
+                if (username === 'admin' && hashedPassword.startsWith('8c6976')) {
+                    const token = AppUtils.auth.generateToken(username);
+                    AppUtils.auth.setAuthToken(token);
+                    
+                    // Limpa campos sensíveis
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                    
+                    showAdminPanel();
+                } else {
+                    throw new Error('Credenciais inválidas');
+                }
+            } catch (error) {
+                errorDiv.textContent = error.message;
                 errorDiv.classList.remove('hidden');
             }
-        });
-
-        // Add logout function
-        function logout() {
-            localStorage.removeItem('adminSessionToken');
-            localStorage.removeItem('adminAuthenticated');
-            localStorage.removeItem('galleryItems'); // Opcional: limpar dados da galeria ao sair
-            checkAuth();
-            window.location.href = 'index.html'; // Redireciona para a página principal
         }
 
-        // Verifica autenticação a cada minuto
-        setInterval(checkAuth, 60000);
+        // Upload seguro de imagens
+        async function handleFiles(files) {
+            const loadingDiv = document.getElementById('loadingOverlay');
+            loadingDiv.classList.remove('hidden');
 
-        // Initialize auth check
-        checkAuth();
+            try {
+                for (const file of files) {
+                    // Valida e prepara a imagem
+                    const validatedFile = await AppUtils.image.prepareImageForUpload(file);
+                    
+                    // Em produção, aqui faria upload para um servidor
+                    const base64Image = await AppUtils.image.blobToBase64(validatedFile);
+                    
+                    const newItem = {
+                        id: AppUtils.security.generateSecureId(),
+                        image: base64Image,
+                        title: 'Nova Imagem',
+                        description: 'Descrição da imagem',
+                        category: 'new',
+                        price: '',
+                        createdAt: new Date().toISOString()
+                    };
+
+                    // Salva no localStorage (em produção seria no banco de dados)
+                    let galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
+                    galleryItems.push(newItem);
+                    localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
+                }
+
+                loadGalleryItems();
+            } catch (error) {
+                showError('Erro ao processar imagem: ' + error.message);
+            } finally {
+                loadingDiv.classList.add('hidden');
+            }
+        }
+
+        // Atualização segura de itens
+        async function updateItem(index, field, value) {
+            if (!await checkAuth()) return;
+
+            try {
+                // Sanitiza e valida o input
+                const sanitizedValue = AppUtils.security.sanitizeInput(value);
+                let galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
+                
+                if (!galleryItems[index]) throw new Error('Item não encontrado');
+
+                // Valida os dados antes de salvar
+                const updatedItem = {
+                    ...galleryItems[index],
+                    [field]: sanitizedValue,
+                    updatedAt: new Date().toISOString()
+                };
+
+                const errors = AppUtils.security.validateFormData(updatedItem);
+                if (errors.length > 0) {
+                    throw new Error(errors.join(', '));
+                }
+
+                galleryItems[index] = updatedItem;
+                localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        // Exclusão segura de itens
+        async function deleteItem(index) {
+            if (!await checkAuth()) return;
+
+            if (confirm('Tem certeza que deseja excluir esta imagem?')) {
+                try {
+                    let galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
+                    galleryItems.splice(index, 1);
+                    localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
+                    loadGalleryItems();
+                } catch (error) {
+                    showError('Erro ao excluir item: ' + error.message);
+                }
+            }
+        }
+
+        // Função auxiliar para mostrar erros
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded shadow-lg';
+            errorDiv.textContent = message;
+            document.body.appendChild(errorDiv);
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+
+        // Inicialização segura
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            
+            // Adiciona listeners com tratamento de erro
+            const dropZone = document.getElementById('dropZone');
+            const imageUpload = document.getElementById('imageUpload');
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('drag-over');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('drag-over');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('drag-over');
+                handleFiles(e.dataTransfer.files);
+            });
+
+            imageUpload.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+        });
 
         // Dark mode functionality
         const darkModeToggle = document.getElementById('darkModeToggle');
@@ -343,23 +427,6 @@
             `).join('');
         }
 
-        function updateItem(index, field, value) {
-            let galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
-            if (galleryItems[index]) {
-                galleryItems[index][field] = value;
-                localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
-            }
-        }
-
-        function deleteItem(index) {
-            if (confirm('Tem certeza que deseja excluir esta imagem?')) {
-                let galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
-                galleryItems.splice(index, 1);
-                localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
-                loadGalleryItems();
-            }
-        }
-
         function clearGallery() {
             if (confirm('Tem certeza que deseja limpar toda a galeria? Esta ação não pode ser desfeita.')) {
                 localStorage.removeItem('galleryItems');
@@ -367,52 +434,22 @@
             }
         }
 
-        // File Upload Handling
-        const dropZone = document.getElementById('dropZone');
-        const imageUpload = document.getElementById('imageUpload');
-
-        function handleFiles(files) {
-            Array.from(files).forEach(file => {
-                if (!file.type.startsWith('image/')) return;
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const newItem = {
-                        image: e.target.result,
-                        title: 'Nova Imagem',
-                        description: 'Descrição da imagem',
-                        category: 'new',
-                        price: ''
-                    };
-
-                    let galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
-                    galleryItems.push(newItem);
-                    localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
-                    loadGalleryItems();
-                };
-                reader.readAsDataURL(file);
-            });
+        // Add logout function
+        function logout() {
+            localStorage.removeItem('adminSessionToken');
+            localStorage.removeItem('adminAuthenticated');
+            localStorage.removeItem('galleryItems'); // Opcional: limpar dados da galeria ao sair
+            checkAuth();
+            window.location.href = 'index.html'; // Redireciona para a página principal
         }
-
-        imageUpload.addEventListener('change', (e) => handleFiles(e.target.files));
-
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('drag-over');
-        });
-
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('drag-over');
-        });
-
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('drag-over');
-            handleFiles(e.dataTransfer.files);
-        });
-
-        // Initialize gallery
-        loadGalleryItems();
     </script>
+
+    <!-- Adiciona overlay de carregamento -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white p-4 rounded-lg">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
+            <p class="mt-2">Processando...</p>
+        </div>
+    </div>
 </body>
 </html> 
