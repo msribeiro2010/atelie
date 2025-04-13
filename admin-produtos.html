@@ -222,6 +222,38 @@
     <div id="messageContainer" class="fixed top-4 right-4 z-50"></div>
 
     <script>
+        // Função para verificar autenticação
+        async function checkAuth() {
+            try {
+                // Aguarda a inicialização do Supabase
+                if (!window.db) {
+                    console.log('Aguardando inicialização do Supabase...');
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+                
+                // Verifica se o db está disponível
+                if (!window.db) {
+                    throw new Error('Sistema não foi inicializado corretamente. Por favor, recarregue a página.');
+                }
+                
+                // Verifica a sessão do usuário
+                const { data: { session }, error } = await window.db.auth.getSession();
+                
+                if (error) {
+                    throw error;
+                }
+                
+                if (!session) {
+                    return null;
+                }
+                
+                return session.user;
+            } catch (error) {
+                console.error('Erro ao verificar autenticação:', error);
+                throw error;
+            }
+        }
+
         // Inicialização da página
         async function initializePage() {
             try {
