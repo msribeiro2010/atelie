@@ -404,13 +404,13 @@
                             </td>
                             <td class="py-3 px-4 text-right">
                                 <button type="button"
-                                        onclick="editarProduto(${produto.id})" 
+                                        onclick="editarProduto('${produto.id}')" 
                                         class="text-emerald-600 hover:text-emerald-800 mr-3 p-1"
                                         title="Editar produto">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button type="button"
-                                        onclick="excluirProduto(${produto.id})"
+                                        onclick="excluirProduto('${produto.id}')"
                                         class="text-red-600 hover:text-red-800 p-1"
                                         title="Excluir produto">
                                     <i class="fas fa-trash-alt"></i>
@@ -435,7 +435,7 @@
         // Funções globais para edição e exclusão
         window.editarProduto = async function(id) {
             try {
-                const session = await window.db.auth.checkSession();
+                const session = await window.db.checkSession();
                 if (!session) {
                     alert('Você precisa estar autenticado para editar produtos.');
                     window.location.href = 'admin.html';
@@ -486,7 +486,7 @@
         
         window.excluirProduto = async function(id) {
             try {
-                const session = await window.db.auth.checkSession();
+                const session = await window.db.checkSession();
                 if (!session) {
                     alert('Você precisa estar autenticado para excluir produtos.');
                     window.location.href = 'admin.html';
@@ -572,7 +572,7 @@
             e.preventDefault();
             
             try {
-                const session = await window.db.auth.checkSession();
+                const session = await window.db.checkSession();
                 if (!session) {
                     alert('Você precisa estar autenticado para salvar produtos.');
                     window.location.href = 'admin.html';
