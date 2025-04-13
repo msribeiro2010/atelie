@@ -8,7 +8,69 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js"></script>
-    <script src="js/config.js"></script>
+    
+    <!-- Carrega Supabase e configurações -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    
+    <!-- Verifica se tudo foi carregado corretamente -->
+    <script>
+        // Função para verificar autenticação
+        async function checkAuth() {
+            try {
+                // Aguarda a inicialização do banco de dados
+                const db = await window.initializeDatabase();
+                
+                // Verifica a sessão
+                const session = await db.checkSession();
+                if (!session) {
+                    // Se não estiver autenticado, mostra o formulário de login
+                    document.getElementById('loginForm').style.display = 'block';
+                    document.getElementById('adminPanel').style.display = 'none';
+                } else {
+                    // Se estiver autenticado, mostra o painel admin
+                    document.getElementById('loginForm').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    // Carrega os dados iniciais
+                    loadInitialData();
+                }
+            } catch (error) {
+                console.error('Erro ao verificar autenticação:', error);
+                toastr.error('Erro ao verificar autenticação');
+            }
+        }
+
+        // Função para fazer login
+        async function login(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const db = await window.initializeDatabase();
+                await db.login(email, password);
+                checkAuth();
+            } catch (error) {
+                console.error('Erro no login:', error);
+                toastr.error('Erro ao fazer login');
+            }
+        }
+
+        // Função para fazer logout
+        async function logout() {
+            try {
+                const db = await window.initializeDatabase();
+                await db.auth.logout();
+                showLoginForm();
+            } catch (error) {
+                console.error('Erro ao fazer logout:', error);
+                toastr.error('Erro ao fazer logout');
+            }
+        }
+
+        // Inicia a verificação de autenticação quando a página carregar
+        document.addEventListener('DOMContentLoaded', checkAuth);
+    </script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -59,19 +121,15 @@
     </style>
 </head>
 <body class="bg-emerald-50 font-poppins dark:bg-dark-50">
-    <!-- Login Section -->
-    <div id="loginSection" class="min-h-screen flex items-center justify-center">
-        <div class="bg-white dark:bg-dark-100 p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
-            <div class="text-center mb-8">
-                <img src="atelie.jpg" alt="Rosa Costuras Logo" class="h-20 mx-auto mb-4">
-                <h1 class="text-2xl font-playfair font-bold text-emerald-800 dark:text-emerald-300">Área Administrativa</h1>
-                <p class="text-emerald-600 dark:text-emerald-400 mt-2">Faça login para continuar</p>
-            </div>
+    <!-- Container de Login -->
+    <div id="loginContainer" class="min-h-screen flex items-center justify-center p-4">
+        <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+            <h1 class="text-2xl font-bold text-emerald-800 mb-6 text-center">Login Administrativo</h1>
             
             <form id="loginForm" class="space-y-6">
                 <div>
-                    <label for="username" class="block text-emerald-800 dark:text-emerald-300 font-medium mb-2">Usuário</label>
-                    <input type="text" id="username" 
+                    <label for="username" class="block text-emerald-800 dark:text-emerald-300 font-medium mb-2">E-mail</label>
+                    <input type="email" id="username" 
                            class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500"
                            required>
                 </div>
@@ -83,53 +141,51 @@
                            required>
                 </div>
 
-                <div id="loginError" class="text-red-500 text-center hidden"></div>
+                <div id="loginError" class="hidden text-red-600 bg-red-100 p-3 rounded-lg"></div>
                 
                 <button type="submit" 
-                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 flex items-center justify-center">
-                    <span>Entrar</span>
-                    <i class="fas fa-arrow-right ml-2"></i>
+                        class="w-full bg-emerald-600 text-white py-2 px-4 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+                    Entrar
                 </button>
             </form>
-
-            <div class="mt-6 text-center">
-                <a href="index.html" class="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 text-sm">
-                    <i class="fas fa-arrow-left mr-2"></i>Voltar ao site
-                </a>
-            </div>
         </div>
     </div>
 
-    <!-- Admin Content -->
-    <div id="adminContent" class="hidden">
-        <!-- Header -->
-        <header class="bg-white shadow-lg dark:bg-dark-100">
-            <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-                <div class="flex items-center space-x-4">
-                    <a href="index.html" class="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300">
-                        <i class="fas fa-arrow-left mr-2"></i>Voltar ao site
-                    </a>
-                </div>
-                <h1 class="text-2xl font-playfair font-bold text-emerald-800 dark:text-emerald-300">Área Administrativa</h1>
-                <div class="flex items-center space-x-4">
-                    <button id="darkModeToggle" 
-                            class="p-2 rounded-full hover:bg-emerald-100 dark:hover:bg-dark-200 transition-colors"
-                            title="Alternar modo escuro"
-                            aria-label="Alternar modo escuro">
-                        <i class="fas fa-moon dark:hidden text-emerald-600"></i>
-                        <i class="fas fa-sun hidden dark:block text-emerald-300"></i>
-                    </button>
-                    <button onclick="logout()" 
-                            class="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
-                            title="Sair da área administrativa">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </button>
+    <!-- Painel Administrativo -->
+    <div id="adminPanel" class="hidden">
+        <!-- Cabeçalho -->
+        <header class="bg-white shadow-md">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <h1 class="text-2xl font-bold text-emerald-800">Painel Administrativo</h1>
+                        <nav class="flex gap-4 ml-8">
+                            <a href="admin.html" 
+                               class="text-emerald-700 hover:text-emerald-900 font-medium">
+                                <i class="fas fa-images mr-2"></i>Galeria
+                            </a>
+                            <a href="admin-produtos.html" 
+                               class="text-emerald-700 hover:text-emerald-900 font-medium">
+                                <i class="fas fa-box mr-2"></i>Produtos
+                            </a>
+                        </nav>
+                    </div>
+                    <div class="flex gap-4">
+                        <a href="index.html" 
+                           class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <i class="fas fa-home mr-2"></i>Voltar para o Site
+                        </a>
+                        <button onclick="logout()" 
+                                class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Sair
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>
 
-        <!-- Main Content -->
-        <main class="container mx-auto px-6 py-12">
+        <!-- Conteúdo Principal -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <!-- Gallery Management -->
             <section class="mb-12">
                 <div class="flex justify-between items-center mb-8">
@@ -169,46 +225,126 @@
     </div>
 
     <script>
-        // Verifica autenticação antes de qualquer operação
-        async function checkAuth() {
-            const token = AppUtils.auth.getAuthToken();
-            if (!token || !AppUtils.auth.isTokenValid(token)) {
-                AppUtils.auth.removeAuthToken();
+        // Adiciona o handler de login ao formulário
+        document.getElementById('loginForm').addEventListener('submit', login);
+        
+        // Função de logout
+        async function logout() {
+            try {
+                const db = await window.initializeDatabase();
+                await db.auth.logout();
                 showLoginForm();
-                return false;
+            } catch (error) {
+                console.error('Erro ao fazer logout:', error);
+                toastr.error('Erro ao fazer logout');
             }
-            return true;
         }
 
         // Login seguro
-        async function handleLogin(e) {
+        async function login(e) {
             e.preventDefault();
-            const username = DOMPurify.sanitize(document.getElementById('username').value);
-            const password = document.getElementById('password').value;
-            const errorDiv = document.getElementById('loginError');
-
+            
             try {
-                // Hash da senha antes de comparar
-                const hashedPassword = await AppUtils.auth.hashPassword(password);
+                const email = DOMPurify.sanitize(document.getElementById('username').value);
+                const password = document.getElementById('password').value;
+                const errorDiv = document.getElementById('loginError');
                 
-                // Em produção, isso seria uma chamada API
-                if (username === 'admin' && hashedPassword.startsWith('8c6976')) {
-                    const token = AppUtils.auth.generateToken(username);
-                    AppUtils.auth.setAuthToken(token);
+                // Limpar mensagens de erro anteriores
+                errorDiv.textContent = '';
+                errorDiv.classList.add('hidden');
+
+                console.log('Tentando fazer login...');
+                const db = await window.initializeDatabase();
+                const response = await db.auth.login(email, password);
+                console.log('Resposta do login:', response);
+                
+                if (response.error) {
+                    console.error('❌ Login falhou - erro:', response.error);
+                    errorDiv.textContent = 'Erro ao fazer login: ' + (response.error.message || 'Credenciais inválidas');
+                    errorDiv.classList.remove('hidden');
+                    return;
+                }
+
+                if (response.data?.session) {
+                    console.log('✅ Login bem-sucedido, mostrando painel admin');
+                    // Esconde o formulário de login
+                    document.getElementById('loginForm').classList.add('hidden');
+                    document.getElementById('loginContainer').classList.add('hidden');
                     
-                    // Limpa campos sensíveis
-                    document.getElementById('username').value = '';
-                    document.getElementById('password').value = '';
+                    // Mostra o painel administrativo
+                    const adminPanel = document.getElementById('adminPanel');
+                    adminPanel.classList.remove('hidden');
                     
-                    showAdminPanel();
+                    // Atualiza a interface
+                    loadGalleryItems();
                 } else {
-                    throw new Error('Credenciais inválidas');
+                    console.error('❌ Login falhou - sem dados de sessão');
+                    errorDiv.textContent = 'Erro ao fazer login. Verifique suas credenciais.';
+                    errorDiv.classList.remove('hidden');
                 }
             } catch (error) {
-                errorDiv.textContent = error.message;
+                console.error('❌ Erro no login:', error);
+                const errorDiv = document.getElementById('loginError');
+                errorDiv.textContent = 'Erro ao fazer login: ' + (error.message || 'Tente novamente mais tarde');
                 errorDiv.classList.remove('hidden');
             }
         }
+
+        // Verifica autenticação antes de qualquer operação
+        async function checkAuth() {
+            try {
+                console.log('Verificando autenticação...');
+                const db = await window.initializeDatabase();
+                const session = await db.auth.checkSession();
+                console.log('Sessão atual:', session);
+
+                if (session) {
+                    console.log('✅ Usuário autenticado, mostrando painel admin');
+                    // Esconde o formulário de login
+                    document.getElementById('loginForm').classList.add('hidden');
+                    document.getElementById('loginContainer').classList.add('hidden');
+                    
+                    // Mostra o painel administrativo
+                    const adminPanel = document.getElementById('adminPanel');
+                    adminPanel.classList.remove('hidden');
+                    
+                    // Atualiza a interface
+                    loadGalleryItems();
+                    return true;
+                } else {
+                    console.log('❌ Usuário não autenticado, mostrando login');
+                    showLoginForm();
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ Erro ao verificar autenticação:', error);
+                showLoginForm();
+                return false;
+            }
+        }
+
+        // Função para mostrar o formulário de login
+        function showLoginForm() {
+            console.log('Mostrando formulário de login');
+            document.getElementById('loginContainer').classList.remove('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('adminPanel').classList.add('hidden');
+        }
+
+        // Função para mostrar o painel administrativo
+        function showAdminPanel() {
+            console.log('Mostrando painel administrativo');
+            document.getElementById('loginContainer').classList.add('hidden');
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('adminPanel').classList.remove('hidden');
+            loadGalleryItems();
+        }
+
+        // Inicializa a verificação de autenticação quando a página carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Página carregada, verificando autenticação...');
+            checkAuth();
+        });
 
         // Upload seguro de imagens
         async function handleFiles(files) {
@@ -345,102 +481,129 @@
         });
 
         // Gallery Management
-        function loadGalleryItems() {
-            const grid = document.getElementById('galleryGrid');
-            let galleryItems = JSON.parse(localStorage.getItem('galleryItems') || '[]');
-            
-            // Se não houver itens, use os itens padrão
-            if (galleryItems.length === 0) {
-                galleryItems = [
-                    {
-                        image: 'images/vestido1.jpeg',
-                        title: 'Vestido Elegante',
-                        description: 'Ajustes perfeitos para ocasiões especiais',
-                        category: 'new',
-                        price: '150,00'
-                    },
-                    {
-                        image: 'images/vestido2.jpeg',
-                        title: 'Vestido Casual',
-                        description: 'Conforto e estilo para o dia a dia',
-                        category: 'new',
-                        price: '120,00'
-                    },
-                    {
-                        image: 'images/vestido3.jpeg',
-                        title: 'Vestido Festa',
-                        description: 'Customização para eventos especiais',
-                        category: 'novelty',
-                        price: '200,00'
-                    },
-                    {
-                        image: 'images/vestido4.jpeg',
-                        title: 'Vestido Moderno',
-                        description: 'Design contemporâneo com acabamento impecável',
-                        category: 'new',
-                        price: '180,00'
-                    },
-                    {
-                        image: 'images/vestido5.png',
-                        title: 'Vestido Premium',
-                        description: 'Alta costura com detalhes únicos',
-                        category: 'novelty',
-                        price: '250,00'
-                    }
-                ];
-                localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
-            }
-            
-            grid.innerHTML = galleryItems.map((item, index) => `
-                <div class="gallery-item" data-index="${index}">
-                    <img src="${item.image}" 
-                         alt="${item.title}"
-                         class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity p-4 flex flex-col">
-                        <input type="text" value="${item.title}" 
-                               class="bg-transparent border-b border-white text-white mb-2 px-2"
-                               onchange="updateItem(${index}, 'title', this.value)"
-                               placeholder="Título">
-                        <textarea class="bg-transparent border-b border-white text-white mb-2 px-2 flex-grow"
-                                  onchange="updateItem(${index}, 'description', this.value)"
-                                  placeholder="Descrição">${item.description}</textarea>
-                        <div class="flex items-center space-x-2 mb-2">
-                            <span class="text-white">R$</span>
-                            <input type="text" value="${item.price || ''}" 
-                                   class="bg-transparent border-b border-white text-white px-2 flex-grow"
-                                   onchange="updateItem(${index}, 'price', this.value)"
-                                   placeholder="Preço"
-                                   pattern="[0-9,.]*"
-                                   title="Digite apenas números e vírgula">
+        async function loadGalleryItems() {
+            try {
+                const grid = document.getElementById('galleryGrid');
+                console.log('Carregando produtos do Supabase...');
+                
+                // Mostra loading
+                document.getElementById('loadingOverlay').classList.remove('hidden');
+                
+                // Inicializa o banco de dados primeiro
+                const db = await window.initializeDatabase();
+                console.log('Banco de dados inicializado:', db);
+                
+                // Busca produtos do Supabase
+                const produtos = await db.produtos.listar();
+                console.log('Produtos carregados:', produtos);
+                
+                if (!produtos || produtos.length === 0) {
+                    grid.innerHTML = '<p class="text-center col-span-full text-gray-500">Nenhum produto cadastrado.</p>';
+                    return;
+                }
+                
+                grid.innerHTML = produtos.map((item, index) => `
+                    <div class="gallery-item" data-index="${index}">
+                        <img src="${item.imagem_url || '/images/no-image.svg'}" 
+                             alt="${item.nome}"
+                             class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity p-4 flex flex-col">
+                            <input type="text" value="${item.nome}" 
+                                   class="bg-transparent border-b border-white text-white mb-2 px-2"
+                                   onchange="updateItem(${item.id}, 'nome', this.value)"
+                                   placeholder="Nome do produto">
+                            <textarea class="bg-transparent border-b border-white text-white mb-2 px-2 flex-grow"
+                                      onchange="updateItem(${item.id}, 'descricao', this.value)"
+                                      placeholder="Descrição">${item.descricao || ''}</textarea>
+                            <div class="flex items-center space-x-2 mb-2">
+                                <span class="text-white">R$</span>
+                                <input type="text" value="${item.preco || ''}" 
+                                       class="bg-transparent border-b border-white text-white px-2 flex-grow"
+                                       onchange="updateItem(${item.id}, 'preco', this.value)"
+                                       placeholder="Preço"
+                                       pattern="[0-9,.]*"
+                                       title="Digite apenas números e vírgula">
+                            </div>
+                            <div class="flex items-center space-x-2 mb-2">
+                                <label class="text-white flex items-center">
+                                    <input type="checkbox" 
+                                           ${item.disponivel ? 'checked' : ''} 
+                                           onchange="updateItem(${item.id}, 'disponivel', this.checked)"
+                                           class="mr-2">
+                                    Disponível
+                                </label>
+                                <label class="text-white flex items-center ml-4">
+                                    <input type="checkbox" 
+                                           ${item.destaque ? 'checked' : ''} 
+                                           onchange="updateItem(${item.id}, 'destaque', this.checked)"
+                                           class="mr-2">
+                                    Destaque
+                                </label>
+                            </div>
+                            <button onclick="deleteItem(${item.id})" 
+                                    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">
+                                <i class="fas fa-trash-alt mr-2"></i>Excluir
+                            </button>
                         </div>
-                        <select class="bg-black bg-opacity-50 text-white mb-4 px-2 py-1 rounded"
-                                onchange="updateItem(${index}, 'category', this.value)">
-                            <option value="new" ${item.category === 'new' ? 'selected' : ''}>Lançamento</option>
-                            <option value="novelty" ${item.category === 'novelty' ? 'selected' : ''}>Novidade</option>
-                        </select>
-                        <button onclick="deleteItem(${index})" 
-                                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">
-                            <i class="fas fa-trash-alt mr-2"></i>Excluir
-                        </button>
                     </div>
-                </div>
-            `).join('');
-        }
-
-        function clearGallery() {
-            if (confirm('Tem certeza que deseja limpar toda a galeria? Esta ação não pode ser desfeita.')) {
-                localStorage.removeItem('galleryItems');
-                loadGalleryItems();
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar produtos:', error);
+                showError('Erro ao carregar produtos: ' + error.message);
+            } finally {
+                // Esconde loading
+                document.getElementById('loadingOverlay').classList.add('hidden');
             }
         }
 
-        // Add logout function
-        function logout() {
-            localStorage.removeItem('adminSessionToken');
-            localStorage.removeItem('adminAuthenticated');
-            localStorage.removeItem('galleryItems'); // Opcional: limpar dados da galeria ao sair
-            checkAuth();
-            window.location.href = 'index.html'; // Redireciona para a página principal
+        // Atualização de item no Supabase
+        async function updateItem(id, field, value) {
+            if (!await checkAuth()) return;
+
+            try {
+                // Sanitiza e valida o input
+                const sanitizedValue = DOMPurify.sanitize(value);
+                
+                // Prepara o objeto de atualização
+                const updateData = {
+                    [field]: sanitizedValue
+                };
+
+                // Inicializa o banco de dados primeiro
+                const db = await window.initializeDatabase();
+                
+                // Atualiza no Supabase
+                await db.produtos.atualizar(id, updateData);
+                
+                // Recarrega a lista
+                await loadGalleryItems();
+            } catch (error) {
+                console.error('Erro ao atualizar produto:', error);
+                showError('Erro ao atualizar produto: ' + error.message);
+            }
+        }
+
+        // Exclusão de item no Supabase
+        async function deleteItem(id) {
+            if (!await checkAuth()) return;
+
+            if (confirm('Tem certeza que deseja excluir este produto?')) {
+                try {
+                    // Inicializa o banco de dados primeiro
+                    const db = await window.initializeDatabase();
+                    
+                    await db.produtos.excluir(id);
+                    await loadGalleryItems();
+                } catch (error) {
+                    console.error('Erro ao excluir produto:', error);
+                    showError('Erro ao excluir produto: ' + error.message);
+                }
+            }
+        }
+
+        // Função para limpar a galeria não é mais necessária pois os dados estão no Supabase
+        function clearGallery() {
+            showError('Esta função não está mais disponível. Os produtos agora são gerenciados no banco de dados.');
         }
     </script>
 

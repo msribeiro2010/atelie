@@ -7,6 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Supabase Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -715,93 +718,77 @@
     </div>
 
     <script>
-        // Galeria de imagens padrão
-        const defaultGalleryItems = [
-            {
-                image: 'images/vestido1.jpeg',
-                title: 'Vestido Elegante',
-                description: 'Ajustes perfeitos para ocasiões especiais',
-                category: 'new'
-            },
-            {
-                image: 'images/vestido2.jpeg',
-                title: 'Vestido Casual',
-                description: 'Conforto e estilo para o dia a dia',
-                category: 'new'
-            },
-            {
-                image: 'images/vestido3.jpeg',
-                title: 'Vestido Festa',
-                description: 'Customização para eventos especiais',
-                category: 'novelty'
-            },
-            {
-                image: 'images/vestido4.jpeg',
-                title: 'Vestido Moderno',
-                description: 'Design contemporâneo com acabamento impecável',
-                category: 'new'
-            },
-            {
-                image: 'images/vestido5.png',
-                title: 'Vestido Premium',
-                description: 'Alta costura com detalhes únicos',
-                category: 'novelty'
-            }
-        ];
-
         // Load gallery items
-        function loadGalleryItems() {
-            const grid = document.getElementById('galleryGrid');
-            let galleryItems;
-            
+        async function loadGalleryItems() {
             try {
-                // Tenta carregar do localStorage
-                const savedItems = localStorage.getItem('galleryItems');
-                galleryItems = savedItems ? JSON.parse(savedItems) : defaultGalleryItems;
+                console.log('Carregando produtos do Supabase...');
+                const grid = document.getElementById('galleryGrid');
                 
-                // Verifica se as imagens existem
-                galleryItems = galleryItems.filter(item => {
-                    const img = new Image();
-                    img.src = item.image;
-                    return true; // Remove a validação que estava causando problemas
+                // Mostra loading
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-8">
+                        <i class="fas fa-spinner fa-spin text-emerald-500 text-2xl mr-2"></i>
+                        <span class="text-emerald-600 dark:text-emerald-400">Carregando produtos...</span>
+                    </div>
+                `;
+                
+                // Inicializa o banco de dados primeiro
+                const db = await window.initializeDatabase();
+                console.log('Banco de dados inicializado:', db);
+                
+                // Busca produtos do Supabase
+                const produtos = await db.produtos.listar({
+                    disponivel: true // Apenas produtos disponíveis
                 });
-
-                // Se não houver imagens, usa as padrão
-                if (galleryItems.length === 0) {
-                    galleryItems = defaultGalleryItems;
-                    localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
+                console.log('Produtos carregados:', produtos);
+                
+                if (!produtos || produtos.length === 0) {
+                    grid.innerHTML = `
+                        <div class="col-span-full text-center py-8">
+                            <p class="text-emerald-600 dark:text-emerald-400">Nenhum produto disponível no momento.</p>
+                        </div>
+                    `;
+                    return;
                 }
-            } catch (e) {
-                console.warn('Erro ao carregar galeria:', e);
-                galleryItems = defaultGalleryItems;
-                localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
-            }
-
-            // Renderiza a galeria
-            grid.innerHTML = galleryItems.map((item, index) => `
-                <div class="gallery-item ${item.category}" data-category="${item.category}">
-                    <img src="${item.image}" 
-                         alt="${item.title}" 
-                         class="w-full h-full object-cover cursor-pointer"
-                         loading="lazy"
-                         onerror="this.onerror=null; this.src='atelie.jpg'; console.warn('Erro ao carregar imagem:', this.src);"
-                         onclick="openImageModal(this, ${index})">
-                    <div class="overlay">
-                        <h3 class="font-bold text-white text-xl mb-2">${item.title}</h3>
-                        <p class="text-gray-200 mb-4">${item.description}</p>
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="inline-block bg-emerald-500/50 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm">
-                                ${item.category === 'new' ? 'Lançamento' : 'Novidade'}
-                            </span>
-                            ${item.price ? `
-                            <span class="text-white font-semibold">
-                                R$ ${item.price}
-                            </span>
-                            ` : ''}
+                
+                // Renderiza a galeria
+                grid.innerHTML = produtos.map((produto, index) => `
+                    <div class="gallery-item ${produto.destaque ? 'new' : 'novelty'}" 
+                         data-category="${produto.destaque ? 'new' : 'novelty'}">
+                        <img src="${produto.imagem_url}" 
+                             alt="${produto.nome}" 
+                             class="w-full h-full object-cover cursor-pointer"
+                             loading="lazy"
+                             onerror="this.onerror=null; this.src='/images/no-image.svg'; console.warn('Erro ao carregar imagem:', this.src);"
+                             onclick="openImageModal(this, ${index})">
+                        <div class="overlay">
+                            <h3 class="font-bold text-white text-xl mb-2">${produto.nome}</h3>
+                            <p class="text-gray-200 mb-4">${produto.descricao || ''}</p>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="inline-block bg-emerald-500/50 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm">
+                                    ${produto.destaque ? 'Lançamento' : 'Novidade'}
+                                </span>
+                                ${produto.preco ? `
+                                <span class="text-white font-semibold">
+                                    R$ ${Number(produto.preco).toFixed(2).replace('.', ',')}
+                                </span>
+                                ` : ''}
+                            </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar produtos:', error);
+                const grid = document.getElementById('galleryGrid');
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-8">
+                        <p class="text-red-600 dark:text-red-400">
+                            <i class="fas fa-exclamation-circle mr-2"></i>
+                            Erro ao carregar produtos: ${error.message}
+                        </p>
+                    </div>
+                `;
+            }
         }
 
         // Gallery Filter Function

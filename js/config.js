@@ -32,9 +32,14 @@ const AuthUtils = {
     isTokenValid(token) {
         try {
             const [, payload] = token.split('.');
-            const { exp } = JSON.parse(atob(payload));
-            return Date.now() < exp * 1000;
-        } catch {
+            if (!payload) return false;
+            
+            const decodedPayload = JSON.parse(atob(payload));
+            if (!decodedPayload || !decodedPayload.exp) return false;
+            
+            return Date.now() < decodedPayload.exp * 1000;
+        } catch (error) {
+            console.error('Erro ao validar token:', error);
             return false;
         }
     },

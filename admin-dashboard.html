@@ -96,10 +96,15 @@
             }
         }
 
-        // Logout function
-        function logout() {
-            localStorage.removeItem('adminAuthenticated');
-            window.location.href = 'admin.html';
+        // Função de logout segura
+        async function logout() {
+            try {
+                await window.db.logout();
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Erro ao fazer logout:', error);
+                alert('Erro ao fazer logout. Por favor, tente novamente.');
+            }
         }
 
         // Upload Modal Functions
