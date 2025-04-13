@@ -174,22 +174,40 @@
                     </div>
                     
                     <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="border-b border-emerald-100 dark:border-dark-200">
-                                    <th class="py-3 px-4 text-left text-emerald-800 dark:text-emerald-300">Imagem</th>
-                                    <th class="py-3 px-4 text-left text-emerald-800 dark:text-emerald-300">Nome</th>
-                                    <th class="py-3 px-4 text-left text-emerald-800 dark:text-emerald-300">Categoria</th>
-                                    <th class="py-3 px-4 text-left text-emerald-800 dark:text-emerald-300">Preço</th>
-                                    <th class="py-3 px-4 text-left text-emerald-800 dark:text-emerald-300">Status</th>
-                                    <th class="py-3 px-4 text-right text-emerald-800 dark:text-emerald-300">Ações</th>
+                        <table id="produtos-table" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-800">
+                                <tr>
+                                    <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+                                        Imagem
+                                    </th>
+                                    <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+                                        Nome
+                                    </th>
+                                    <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+                                        Preço
+                                    </th>
+                                    <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+                                        Status
+                                    </th>
+                                    <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+                                        Ações
+                                    </th>
                                 </tr>
                             </thead>
-                            <tbody id="produtosTabela">
-                                <!-- Será preenchido via JS -->
-                                <tr>
-                                    <td colspan="6" class="py-8 text-center text-emerald-600 dark:text-emerald-400">
-                                        <i class="fas fa-spinner fa-spin mr-2"></i> Carregando produtos...
+                            <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
+                                <tr id="loading-row" class="hidden">
+                                    <td colspan="6" class="text-center py-4">
+                                        <div class="flex items-center justify-center gap-1">
+                                            <div class="w-2 h-2 bg-primary-500 rounded-full animate-bounce"></div>
+                                            <div class="w-2 h-2 bg-primary-500 rounded-full animate-bounce200"></div>
+                                            <div class="w-2 h-2 bg-primary-500 rounded-full animate-bounce400"></div>
+                                            <span class="ml-2">Carregando produtos...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr id="no-products-row" style="display: none;">
+                                    <td colspan="5" class="p-4 text-center">
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">Nenhum produto cadastrado</p>
                                     </td>
                                 </tr>
                             </tbody>
@@ -205,71 +223,63 @@
 
     <script>
         // Inicialização da página
-        document.addEventListener('DOMContentLoaded', async () => {
+        async function initializePage() {
             try {
-                console.log('Iniciando configuração da página...');
-                
-                // Aguardar um momento para garantir que o Supabase foi inicializado
-                if (!window.db) {
-                    console.log('Aguardando inicialização do Supabase...');
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                }
-                
-                // Verificar se o db está disponível
-                if (!window.db) {
-                    throw new Error('Sistema não foi inicializado corretamente. Por favor, recarregue a página.');
-                }
-                
-                console.log('Sistema inicializado:', window.db);
-                
-                // Verificar autenticação
-                const session = await window.db.auth.checkSession();
-                if (!session) {
-                    console.log('Usuário não autenticado, redirecionando...');
-                    window.location.href = 'login.html';
+                // Verifica autenticação
+                const user = await checkAuth();
+                if (!user) {
+                    window.location.href = '/login.html';
                     return;
                 }
+
+                // Inicializa o banco de dados
+                await initializeDatabase();
                 
-                console.log('Usuário autenticado:', session);
+                // Carrega as categorias
+                await loadCategorias();
                 
-                // Configurar funcionalidades
-                setupDarkMode();
+                // Carrega os produtos
+                await loadProdutos();
+                
+                // Configura os event listeners
                 setupEventListeners();
                 
-                // Carregar dados
-                console.log('Carregando dados iniciais...');
-                try {
-                    await loadCategorias();
-                    console.log('Categorias carregadas com sucesso');
-                } catch (error) {
-                    console.error('Erro ao carregar categorias:', error);
-                    showMessage('Erro ao carregar categorias: ' + error.message, 'error');
-                }
-                
-                try {
-                    await loadProdutos();
-                    console.log('Produtos carregados com sucesso');
-                } catch (error) {
-                    console.error('Erro ao carregar produtos:', error);
-                    showMessage('Erro ao carregar produtos: ' + error.message, 'error');
-                }
-                
-                console.log('Inicialização concluída com sucesso');
             } catch (error) {
-                console.error('Erro na inicialização:', error);
+                console.error('Erro ao inicializar página:', error);
                 showMessage('Erro ao inicializar página: ' + error.message, 'error');
             }
-        });
+        }
         
         // Função para mostrar mensagens
-        function showMessage(message, type = 'success') {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `fixed top-4 right-4 p-4 rounded-lg ${
-                type === 'success' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
-            }`;
-            alertDiv.textContent = message;
-            document.body.appendChild(alertDiv);
-            setTimeout(() => alertDiv.remove(), 3000);
+        function showMessage(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg text-white transform transition-all duration-300 translate-y-full`;
+            
+            switch (type) {
+                case 'success':
+                    toast.classList.add('bg-green-500');
+                    break;
+                case 'error':
+                    toast.classList.add('bg-red-500');
+                    break;
+                default:
+                    toast.classList.add('bg-blue-500');
+            }
+            
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            // Força um reflow para que a animação funcione
+            toast.offsetHeight;
+            
+            // Mostra o toast
+            toast.classList.remove('translate-y-full');
+            
+            // Remove o toast após 3 segundos
+            setTimeout(() => {
+                toast.classList.add('translate-y-full');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
         
         // Configurar modo escuro
@@ -314,222 +324,173 @@
             }
         }
         
-        // Carregar produtos
+        // Função para carregar produtos
         async function loadProdutos() {
+            const loadingRow = document.getElementById('loading-row');
+            const tbody = document.querySelector('tbody');
+            
+            // Limpa a tabela e mostra o loading
+            tbody.querySelectorAll('tr:not(#loading-row)').forEach(tr => tr.remove());
+            loadingRow.classList.remove('hidden');
+            
             try {
-                console.log('Iniciando carregamento de produtos...');
-                const tbody = document.getElementById('produtosTabela');
+                const produtos = await window.db.produtos.listar();
                 
-                // Mostrar loading
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" class="py-8 text-center text-emerald-600 dark:text-emerald-400">
-                            <i class="fas fa-spinner fa-spin mr-2"></i> Carregando produtos...
+                // Esconde o loading
+                loadingRow.classList.add('hidden');
+                
+                if (produtos.length === 0) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td colspan="6" class="text-center py-4 text-gray-500 dark:text-gray-400">
+                            Nenhum produto cadastrado
                         </td>
-                    </tr>
-                `;
-                
-                // Verificar se o db está disponível
-                if (!window.db || !window.db.produtos) {
-                    console.error('Objeto db ou db.produtos não está disponível:', window.db);
-                    throw new Error('Sistema não está inicializado corretamente. Por favor, recarregue a página.');
-                }
-                
-                // Obter filtro de categoria
-                const categoriaId = document.getElementById('filtroCategoria').value;
-                const filtros = categoriaId ? { categoria: categoriaId } : {};
-                
-                console.log('Buscando produtos com filtros:', filtros);
-                
-                // Carregar produtos usando o objeto db global
-                const produtos = await window.db.produtos.listar(filtros);
-                console.log('Produtos carregados:', produtos);
-                
-                if (!produtos || produtos.length === 0) {
-                    tbody.innerHTML = `
-                        <tr>
-                            <td colspan="6" class="py-8 text-center text-emerald-600 dark:text-emerald-400">
-                                Nenhum produto encontrado. Cadastre seu primeiro produto!
-                            </td>
-                        </tr>
                     `;
+                    tbody.appendChild(tr);
                     return;
                 }
                 
-                // Renderizar produtos
-                tbody.innerHTML = produtos.map(produto => {
-                    // Função auxiliar para formatar preço
-                    const formatarPreco = (preco) => {
-                        if (!preco) return '0,00';
-                        return Number(preco).toFixed(2).replace('.', ',');
-                    };
-
-                    // Função auxiliar para renderizar imagem
-                    const renderizarImagem = (url, nome) => {
-                        if (!url || url === '/images/no-image.svg') {
-                            return `<div class="h-16 w-16 bg-gray-200 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-image text-gray-400"></i>
-                            </div>`;
-                        }
-                        
-                        return `<div class="relative h-16 w-16">
-                            <img src="${produto.imagem_url}" 
-                                alt="${produto.nome}"
-                                crossorigin="anonymous"
-                                loading="lazy"
-                                class="h-16 w-16 object-cover rounded-lg"
-                                onerror="this.onerror=null; this.src='/images/no-image.svg'; this.classList.add('error-image');">
-                            <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-opacity rounded-lg"></div>
-                        </div>`;
-                    };
-
-                    return `
-                        <tr class="border-b border-emerald-50 dark:border-dark-200 hover:bg-emerald-50 dark:hover:bg-dark-200">
-                            <td class="py-3 px-4">
-                                ${renderizarImagem(produto.imagem_url, produto.nome)}
-                            </td>
-                            <td class="py-3 px-4 font-medium">${produto.nome || 'Sem nome'}</td>
-                            <td class="py-3 px-4">${produto.categorias?.nome || 'Sem categoria'}</td>
-                            <td class="py-3 px-4">R$ ${formatarPreco(produto.preco)}</td>
-                            <td class="py-3 px-4">
-                                <span class="text-sm ${produto.disponivel ? 'text-green-600' : 'text-gray-600'}">
-                                    <i class="fas ${produto.disponivel ? 'fa-check-circle' : 'fa-times-circle'} mr-1"></i>
-                                    ${produto.disponivel ? 'Disponível' : 'Indisponível'}
-                                </span>
-                                ${produto.destaque ? 
-                                    `<span class="ml-2 text-sm text-amber-600">
-                                        <i class="fas fa-star mr-1"></i>Destaque
-                                    </span>` : ''
-                                }
-                            </td>
-                            <td class="py-3 px-4 text-right">
-                                <button type="button"
-                                        onclick="editarProduto('${produto.id}')" 
-                                        class="text-emerald-600 hover:text-emerald-800 mr-3 p-1"
-                                        title="Editar produto">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button type="button"
-                                        onclick="excluirProduto('${produto.id}')"
-                                        class="text-red-600 hover:text-red-800 p-1"
-                                        title="Excluir produto">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </td>
-                        </tr>
+                produtos.forEach(produto => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-gray-50 dark:hover:bg-gray-800';
+                    tr.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="h-10 w-10 flex-shrink-0">
+                                    <img class="h-10 w-10 rounded-full object-cover" 
+                                         src="${produto.imagem_url || '/images/no-image.svg'}" 
+                                         alt="${produto.nome}">
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                        ${produto.nome}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900 dark:text-white">${produto.categoria}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900 dark:text-white">
+                                R$ ${parseFloat(produto.preco).toFixed(2)}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${produto.disponivel ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                ${produto.disponivel ? 'Disponível' : 'Indisponível'}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button onclick="editarProduto(${produto.id})" 
+                                    class="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300 mr-3">
+                                Editar
+                            </button>
+                            <button onclick="excluirProduto(${produto.id})" 
+                                    class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                                Excluir
+                            </button>
+                        </td>
                     `;
-                }).join('');
-                
+                    tbody.appendChild(tr);
+                });
             } catch (error) {
                 console.error('Erro ao carregar produtos:', error);
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" class="py-8 text-center text-red-600">
-                            <i class="fas fa-exclamation-circle mr-2"></i> Erro ao carregar produtos: ${error.message}
-                        </td>
-                    </tr>
+                loadingRow.classList.add('hidden');
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td colspan="6" class="text-center py-4 text-red-500">
+                        Erro ao carregar produtos. Por favor, tente novamente.
+                    </td>
                 `;
+                tbody.appendChild(tr);
             }
         }
         
-        // Funções globais para edição e exclusão
-        window.editarProduto = async function(id) {
+        // Função para editar produto
+        async function editarProduto(id) {
             try {
-                const session = await window.db.checkSession();
-                if (!session) {
-                    alert('Você precisa estar autenticado para editar produtos.');
-                    window.location.href = 'admin.html';
+                const produto = await window.db.produtos.buscar(id);
+                if (!produto) {
+                    showMessage('Produto não encontrado', 'error');
                     return;
                 }
-
-                console.log('Editando produto:', id);
-                const produto = await window.db.produtos.buscar(id);
                 
-                if (!produto) {
-                    throw new Error('Produto não encontrado');
-                }
+                const form = document.getElementById('produtoForm');
+                form.dataset.produtoId = id;
                 
-                // Preencher formulário
-                document.getElementById('produto_id').value = produto.id;
-                document.getElementById('nome').value = produto.nome || '';
-                document.getElementById('categoria').value = produto.categoria_id || '';
-                document.getElementById('preco').value = produto.preco || '';
-                document.getElementById('descricao').value = produto.descricao || '';
-                document.getElementById('disponivel').checked = produto.disponivel || false;
-                document.getElementById('destaque').checked = produto.destaque || false;
+                form.elements.nome.value = produto.nome;
+                form.elements.categoria.value = produto.categoria;
+                form.elements.preco.value = produto.preco;
+                form.elements.descricao.value = produto.descricao;
+                form.elements.disponivel.value = produto.disponivel;
                 
-                // Atualizar imagem preview
+                // Atualiza o preview da imagem
                 const imagePreview = document.getElementById('imagePreview');
-                const previewContainer = document.getElementById('previewContainer');
+                const imagePreviewContainer = document.getElementById('previewContainer');
                 
                 if (produto.imagem_url) {
                     imagePreview.src = produto.imagem_url;
-                    imagePreview.setAttribute('data-current-url', produto.imagem_url);
-                    previewContainer.classList.remove('hidden');
+                    imagePreviewContainer.classList.remove('hidden');
                 } else {
-                    previewContainer.classList.add('hidden');
+                    imagePreview.src = '';
+                    imagePreviewContainer.classList.add('hidden');
                 }
                 
-                // Atualizar título e botões
+                // Atualiza o título e botão do formulário
                 document.getElementById('formTitle').textContent = 'Editar Produto';
-                document.getElementById('buttonText').textContent = 'Atualizar Produto';
-                document.getElementById('cancelButton').classList.remove('hidden');
+                document.getElementById('buttonText').textContent = 'Salvar Alterações';
                 
-                // Scroll para o formulário
-                document.getElementById('produtoForm').scrollIntoView({ behavior: 'smooth' });
-                
+                // Scroll suave até o formulário
+                form.scrollIntoView({ behavior: 'smooth' });
             } catch (error) {
                 console.error('Erro ao editar produto:', error);
                 showMessage('Erro ao editar produto: ' + error.message, 'error');
             }
-        };
+        }
         
-        window.excluirProduto = async function(id) {
+        // Função para excluir produto
+        async function excluirProduto(id) {
+            if (!confirm('Tem certeza que deseja excluir este produto?')) {
+                return;
+            }
+            
             try {
-                const session = await window.db.checkSession();
-                if (!session) {
-                    alert('Você precisa estar autenticado para excluir produtos.');
-                    window.location.href = 'admin.html';
-                    return;
-                }
-
-                if (!confirm('Tem certeza que deseja excluir este produto?')) {
-                    return;
-                }
-                
-                console.log('Excluindo produto:', id);
-                
-                // Buscar produto para obter URL da imagem
-                const produto = await window.db.produtos.buscar(id);
-                
-                if (produto?.imagem_url) {
-                    try {
-                        console.log('Excluindo imagem:', produto.imagem_url);
-                        await window.db.storage.excluirArquivo(produto.imagem_url);
-                    } catch (error) {
-                        console.warn('Erro ao excluir imagem:', error);
-                    }
-                }
-                
-                // Excluir produto
                 await window.db.produtos.excluir(id);
-                
                 showMessage('Produto excluído com sucesso!', 'success');
                 await loadProdutos();
-                
             } catch (error) {
                 console.error('Erro ao excluir produto:', error);
                 showMessage('Erro ao excluir produto: ' + error.message, 'error');
             }
-        };
+        }
         
         // Configurar todos os event listeners
         function setupEventListeners() {
-            // Formulário
-            document.getElementById('produtoForm').addEventListener('submit', handleFormSubmit);
+            // Form de produto
+            const form = document.getElementById('produtoForm');
+            form.addEventListener('submit', handleFormSubmit);
             
-            // Cancelar edição
-            document.getElementById('cancelButton').addEventListener('click', resetForm);
+            // Preview de imagem
+            const imageInput = document.getElementById('imagem');
+            const imagePreview = document.getElementById('imagePreview');
+            const imagePreviewContainer = document.getElementById('previewContainer');
+            
+            imageInput.addEventListener('change', () => {
+                const file = imageInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        imagePreview.src = e.target.result;
+                        imagePreviewContainer.classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    imagePreview.src = '';
+                    imagePreviewContainer.classList.add('hidden');
+                }
+            });
             
             // Filtro de categoria
             document.getElementById('filtroCategoria').addEventListener('change', loadProdutos);
@@ -537,117 +498,69 @@
             // Botão de recarregar
             document.getElementById('recarregarBtn').addEventListener('click', loadProdutos);
             
-            // Upload de imagem
-            const selectImageButton = document.getElementById('selectImage');
-            const imageInput = document.getElementById('imagem');
-            const removeImageButton = document.getElementById('removeImage');
-            
-            selectImageButton.addEventListener('click', () => imageInput.click());
-            
-            imageInput.addEventListener('change', (e) => {
-                if (e.target.files.length > 0) {
-                    const file = e.target.files[0];
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        document.getElementById('imagePreview').src = e.target.result;
-                        document.getElementById('previewContainer').classList.remove('hidden');
-                    };
-                    
-                    reader.readAsDataURL(file);
-                }
-            });
-            
-            removeImageButton.addEventListener('click', () => {
-                imageInput.value = '';
-                document.getElementById('previewContainer').classList.add('hidden');
-            });
-            
             // Migração
             document.getElementById('migrarDados').addEventListener('click', migrarDados);
         }
         
         // Manipular envio do formulário
-        async function handleFormSubmit(e) {
-            e.preventDefault();
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.innerHTML;
             
             try {
-                const session = await window.db.checkSession();
-                if (!session) {
-                    alert('Você precisa estar autenticado para salvar produtos.');
-                    window.location.href = 'admin.html';
-                    return;
-                }
-
-                const id = document.getElementById('produto_id').value;
-                const formData = {
-                    nome: document.getElementById('nome').value.trim(),
-                    categoria_id: document.getElementById('categoria').value,
-                    preco: parseFloat(document.getElementById('preco').value),
-                    descricao: document.getElementById('descricao').value.trim(),
-                    disponivel: document.getElementById('disponivel').checked,
-                    destaque: document.getElementById('destaque').checked
-                };
-
-                // Validar dados
-                if (!formData.nome) throw new Error('Nome é obrigatório');
-                if (!formData.categoria_id) throw new Error('Categoria é obrigatória');
-                if (isNaN(formData.preco) || formData.preco < 0) throw new Error('Preço inválido');
-
-                // Upload de imagem, se existir
-                const imageInput = document.getElementById('imagem');
-                const currentImageUrl = document.getElementById('imagePreview').getAttribute('data-current-url');
+                submitButton.disabled = true;
+                submitButton.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="animate-spin -ml-1 mr-3 h-5 w-5 text-white">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </div>
+                        Salvando...
+                    </div>
+                `;
                 
-                if (imageInput.files.length > 0) {
-                    console.log('Fazendo upload da nova imagem');
-                    formData.imagem_url = await window.db.storage.uploadImagem(imageInput.files[0], 'produtos');
-                    
-                    // Se estiver editando e havia uma imagem anterior, excluir a antiga
-                    if (id && currentImageUrl) {
-                        try {
-                            console.log('Excluindo imagem antiga:', currentImageUrl);
-                            await window.db.storage.excluirArquivo(currentImageUrl);
-                        } catch (error) {
-                            console.warn('Erro ao excluir imagem antiga:', error);
-                        }
-                    }
-                } else if (id && currentImageUrl) {
-                    // Manter a imagem atual se estiver editando
-                    formData.imagem_url = currentImageUrl;
-                }
-
-                // Criar ou atualizar produto
-                let produto;
-                if (id) {
-                    console.log('Atualizando produto:', id, formData);
-                    produto = await window.db.produtos.atualizar(id, formData);
+                const formData = new FormData(form);
+                const produto = {
+                    nome: formData.get('nome'),
+                    categoria: formData.get('categoria'),
+                    preco: parseFloat(formData.get('preco')),
+                    descricao: formData.get('descricao'),
+                    disponivel: formData.get('disponivel') === 'true',
+                    imagem: formData.get('imagem')
+                };
+                
+                const produtoId = form.dataset.produtoId;
+                
+                if (produtoId) {
+                    await window.db.produtos.atualizar(produtoId, produto);
                     showMessage('Produto atualizado com sucesso!', 'success');
                 } else {
-                    console.log('Criando novo produto:', formData);
-                    produto = await window.db.produtos.criar(formData);
+                    await window.db.produtos.criar(produto);
                     showMessage('Produto criado com sucesso!', 'success');
                 }
-
-                // Resetar formulário e recarregar lista
-                resetForm();
+                
+                // Limpa o formulário
+                form.reset();
+                form.removeAttribute('data-produto-id');
+                document.getElementById('previewContainer').classList.add('hidden');
+                document.getElementById('formTitle').textContent = 'Adicionar Produto';
+                submitButton.textContent = 'Adicionar Produto';
+                
+                // Recarrega a lista de produtos
                 await loadProdutos();
-
+                
             } catch (error) {
                 console.error('Erro ao salvar produto:', error);
                 showMessage('Erro ao salvar produto: ' + error.message, 'error');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalButtonText;
             }
-        }
-        
-        // Resetar formulário
-        function resetForm() {
-            document.getElementById('produtoForm').reset();
-            document.getElementById('produto_id').value = '';
-            document.getElementById('previewContainer').classList.add('hidden');
-            
-            // Retornar para modo de criação
-            document.getElementById('formTitle').textContent = 'Adicionar Produto';
-            document.getElementById('buttonText').textContent = 'Salvar Produto';
-            document.getElementById('cancelButton').classList.add('hidden');
         }
         
         // Migrar dados da galeria para o banco
@@ -686,6 +599,9 @@
                 alert('Erro ao fazer logout. Por favor, tente novamente.');
             }
         }
+
+        // Inicializa a página quando o DOM estiver pronto
+        document.addEventListener('DOMContentLoaded', initializePage);
     </script>
 </body>
 </html> 
