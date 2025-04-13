@@ -244,13 +244,17 @@
                 }
                 
                 if (!session) {
+                    // Redireciona para a página de login
+                    window.location.href = 'login.html';
                     return null;
                 }
                 
                 return session.user;
             } catch (error) {
                 console.error('Erro ao verificar autenticação:', error);
-                throw error;
+                // Em caso de erro, também redireciona para a página de login
+                window.location.href = 'login.html';
+                return null;
             }
         }
 
@@ -260,8 +264,7 @@
                 // Verifica autenticação
                 const user = await checkAuth();
                 if (!user) {
-                    window.location.href = '/login.html';
-                    return;
+                    return; // O redirecionamento já foi feito em checkAuth
                 }
 
                 // Inicializa o banco de dados
