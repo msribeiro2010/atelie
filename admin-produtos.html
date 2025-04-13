@@ -228,31 +228,22 @@
                 // Aguarda a inicialização do Supabase
                 if (!window.db) {
                     console.log('Aguardando inicialização do Supabase...');
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                }
-                
-                // Verifica se o db está disponível
-                if (!window.db) {
-                    throw new Error('Sistema não foi inicializado corretamente. Por favor, recarregue a página.');
+                    await initSupabase();
                 }
                 
                 // Verifica a sessão do usuário
-                const { data: { session }, error } = await window.db.auth.getSession();
-                
-                if (error) {
-                    throw error;
-                }
+                const session = await window.db.auth.checkSession();
                 
                 if (!session) {
-                    // Redireciona para a página de login
+                    console.log('Usuário não autenticado, redirecionando...');
                     window.location.href = 'login.html';
                     return null;
                 }
                 
+                console.log('Usuário autenticado:', session.user);
                 return session.user;
             } catch (error) {
                 console.error('Erro ao verificar autenticação:', error);
-                // Em caso de erro, também redireciona para a página de login
                 window.location.href = 'login.html';
                 return null;
             }

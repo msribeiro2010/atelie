@@ -7,41 +7,87 @@ window.SUPABASE_URL = SUPABASE_URL;
 window.SUPABASE_KEY = SUPABASE_KEY;
 
 // Função para inicializar o cliente Supabase
-function initSupabase() {
-  return new Promise((resolve, reject) => {
+async function initSupabase() {
     try {
-      console.log('Tentando inicializar o cliente Supabase...');
-      
-      // Verifica se o objeto supabase da biblioteca está disponível
-      if (typeof supabase === 'undefined') {
-        reject(new Error('❌ Objeto supabase não está disponível. A biblioteca foi carregada?'));
-        return;
-      }
-      
-      console.log('✅ Objeto supabase está disponível');
-      
-      // Inicializa o cliente
-      if (typeof supabase.createClient === 'function') {
-        console.log('✅ Função createClient está disponível');
+        console.log('Tentando inicializar o cliente Supabase...');
         
-        // Cria o cliente e o disponibiliza globalmente
-        window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        console.log('✅ Cliente Supabase inicializado com sucesso:', window.supabaseClient);
-        
-        // Verifica se a API auth está disponível
-        if (window.supabaseClient.auth) {
-          console.log('✅ API auth está disponível');
-          resolve(window.supabaseClient);
-        } else {
-          reject(new Error('❌ API auth não está disponível no cliente'));
+        // Verifica se o objeto supabase da biblioteca está disponível
+        if (typeof supabase === 'undefined') {
+            throw new Error('❌ Objeto supabase não está disponível. A biblioteca foi carregada?');
         }
-      } else {
-        reject(new Error('❌ Função createClient não encontrada no objeto supabase'));
-      }
+        
+        console.log('✅ Objeto supabase está disponível');
+        
+        // Inicializa o cliente
+        if (typeof supabase.createClient === 'function') {
+            console.log('✅ Função createClient está disponível');
+            
+            // Cria o cliente e o disponibiliza globalmente
+            window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            console.log('✅ Cliente Supabase inicializado com sucesso');
+            
+            // Verifica se a API auth está disponível
+            if (window.supabaseClient.auth) {
+                console.log('✅ API auth está disponível');
+                
+                // Configura o objeto db global
+                window.db = {
+                    auth: {
+                        // Verifica a sessão atual
+                        async checkSession() {
+                            try {
+                                const { data: { session }, error } = await window.supabaseClient.auth.getSession();
+                                if (error) throw error;
+                                return session;
+                            } catch (error) {
+                                console.error('Erro ao verificar sessão:', error);
+                                return null;
+                            }
+                        },
+                        
+                        // Login com email e senha
+                        async signIn(email, password) {
+                            try {
+                                const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+                                    email,
+                                    password
+                                });
+                                if (error) throw error;
+                                return data;
+                            } catch (error) {
+                                console.error('Erro no login:', error);
+                                throw error;
+                            }
+                        },
+                        
+                        // Logout
+                        async signOut() {
+                            try {
+                                const { error } = await window.supabaseClient.auth.signOut();
+                                if (error) throw error;
+                                return true;
+                            } catch (error) {
+                                console.error('Erro no logout:', error);
+                                throw error;
+                            }
+                        }
+                    },
+                    categorias,
+                    produtos,
+                    storage
+                };
+                
+                return window.supabaseClient;
+            } else {
+                throw new Error('❌ API auth não está disponível no cliente');
+            }
+        } else {
+            throw new Error('❌ Função createClient não encontrada no objeto supabase');
+        }
     } catch (error) {
-      reject(new Error('❌ Erro ao inicializar o cliente Supabase: ' + error.message));
+        console.error('❌ Erro ao inicializar o cliente Supabase:', error);
+        throw error;
     }
-  });
 }
 
 // Funções de gerenciamento de categorias
