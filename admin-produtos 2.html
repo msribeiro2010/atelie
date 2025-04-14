@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Produtos - Rosa Costuras</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js" defer></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            50: '#1a1a1a',
+                            100: '#2d2d2d',
+                            200: '#404040'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        .font-poppins { font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+<body class="bg-emerald-50 font-poppins dark:bg-dark-50">
+    <!-- Header -->
+    <header class="bg-white shadow-lg dark:bg-dark-100">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <a href="admin.html" class="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300">
+                    <i class="fas fa-arrow-left mr-2"></i>Voltar ao painel
+                </a>
+            </div>
+            <h1 class="text-2xl font-playfair font-bold text-emerald-800 dark:text-emerald-300">Gerenciar Produtos</h1>
+            <div class="flex items-center space-x-4">
+                <button id="darkModeToggle" 
+                        class="p-2 rounded-full hover:bg-emerald-100 dark:hover:bg-dark-200 transition-colors"
+                        title="Alternar modo escuro"
+                        aria-label="Alternar modo escuro">
+                    <i class="fas fa-moon dark:hidden text-emerald-600"></i>
+                    <i class="fas fa-sun hidden dark:block text-emerald-300"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="container mx-auto px-6 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Formulário -->
+            <div class="lg:w-1/3">
+                <div class="bg-white dark:bg-dark-100 p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold text-emerald-800 dark:text-emerald-300 mb-6" id="formTitle">Adicionar Produto</h2>
+                    
+                    <form id="produtoForm" class="space-y-6">
+                        <input type="hidden" id="produto_id">
+                        
+                        <div>
+                            <label for="nome" class="block text-emerald-700 dark:text-emerald-400 mb-2">Nome do Produto</label>
+                            <input type="text" id="nome" required
+                                   class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-dark-200 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500">
+                        </div>
+                        
+                        <div>
+                            <label for="categoria" class="block text-emerald-700 dark:text-emerald-400 mb-2">Categoria</label>
+                            <select id="categoria" required
+                                    class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-dark-200 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500">
+                                <option value="">Selecione uma categoria</option>
+                                <!-- Será preenchido via JS -->
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="preco" class="block text-emerald-700 dark:text-emerald-400 mb-2">Preço (R$)</label>
+                            <input type="number" id="preco" step="0.01" min="0" required
+                                   class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-dark-200 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500">
+                        </div>
+                        
+                        <div>
+                            <label for="descricao" class="block text-emerald-700 dark:text-emerald-400 mb-2">Descrição</label>
+                            <textarea id="descricao" rows="4"
+                                      class="w-full px-4 py-2 rounded-lg border border-emerald-200 dark:border-dark-200 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300 focus:ring-2 focus:ring-emerald-500"></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-emerald-700 dark:text-emerald-400 mb-2">Imagem</label>
+                            <div class="bg-emerald-50 dark:bg-dark-200 p-4 rounded-lg border border-dashed border-emerald-300 dark:border-dark-300">
+                                <input type="file" id="imagem" accept="image/*" class="hidden" aria-label="Selecionar imagem do produto">
+                                <div id="previewContainer" class="text-center mb-4 hidden">
+                                    <img id="imagePreview" 
+                                         class="h-48 mx-auto object-contain rounded-lg" 
+                                         alt="Pré-visualização da imagem do produto"
+                                         crossorigin="anonymous"
+                                         onerror="this.onerror=null; this.src='/images/no-image.svg'; this.classList.add('error-image');">
+                                    <button type="button" id="removeImage" class="mt-2 text-red-500 hover:text-red-700">
+                                        <i class="fas fa-times mr-1"></i> Remover
+                                    </button>
+                                </div>
+                                <button type="button" id="selectImage" 
+                                        class="w-full py-3 bg-emerald-100 dark:bg-dark-300 text-emerald-700 dark:text-emerald-300 rounded-lg hover:bg-emerald-200 dark:hover:bg-dark-400 transition flex items-center justify-center"
+                                        aria-label="Selecionar imagem do produto">
+                                    <i class="fas fa-image mr-2" aria-hidden="true"></i> Selecionar Imagem
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-4">
+                            <label class="flex items-center text-emerald-700 dark:text-emerald-400">
+                                <input type="checkbox" id="disponivel" checked class="mr-2 text-emerald-600" aria-label="Marcar produto como disponível">
+                                Disponível
+                            </label>
+                            
+                            <label class="flex items-center text-emerald-700 dark:text-emerald-400">
+                                <input type="checkbox" id="destaque" class="mr-2 text-emerald-600" aria-label="Marcar produto como destaque">
+                                Destaque
+                            </label>
+                        </div>
+                        
+                        <div class="pt-2">
+                            <button type="submit" 
+                                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+                                    aria-label="Salvar produto">
+                                <i class="fas fa-save mr-2" aria-hidden="true"></i> <span id="buttonText">Salvar Produto</span>
+                            </button>
+                            
+                            <button type="button" id="cancelButton"
+                                    class="w-full mt-3 border border-emerald-600 text-emerald-600 hover:bg-emerald-50 font-medium py-3 px-4 rounded-lg transition-colors hidden"
+                                    aria-label="Cancelar edição">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div id="migracaoContainer" class="mt-6 pt-6 border-t border-emerald-100 dark:border-dark-200">
+                        <h3 class="text-lg font-medium text-emerald-800 dark:text-emerald-300 mb-4">Migração de Dados</h3>
+                        <button id="migrarDados" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+                                aria-label="Migrar dados da galeria atual">
+                            <i class="fas fa-database mr-2" aria-hidden="true"></i> Migrar Galeria Atual
+                        </button>
+                        <p class="text-sm text-emerald-600 dark:text-emerald-400 mt-2">
+                            Esta ação irá transferir as imagens da galeria atual para o banco de dados.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Lista de produtos -->
+            <div class="lg:w-2/3">
+                <div class="bg-white dark:bg-dark-100 p-6 rounded-lg shadow-md">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold text-emerald-800 dark:text-emerald-300">Produtos Cadastrados</h2>
+                        
+                        <div class="flex items-center gap-2">
+                            <select id="filtroCategoria" 
+                                    class="px-3 py-2 rounded-lg border border-emerald-200 dark:border-dark-200 bg-white dark:bg-dark-200 text-emerald-800 dark:text-emerald-300"
+                                    title="Filtrar por categoria">
+                                <option value="">Todas as categorias</option>
+                                <!-- Será preenchido via JS -->
+                            </select>
+                            
+                            <button id="recarregarBtn" class="p-2 rounded-lg hover:bg-emerald-100 dark:hover:bg-dark-200" 
+                                    aria-label="Recarregar lista de produtos">
+                                <i class="fas fa-sync-alt text-emerald-600 dark:text-emerald-400" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table id="produtos-table" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-800">
+                                <tr>
+                                    <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+                                        Imagem
+                                    </th>
+                                    <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+                                        Nome
+                                    </th>
+                                    <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+                                        Preço
+                                    </th>
+                                    <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+                                        Status
+                                    </th>
+                                    <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+                                        Ações
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
+                                <tr id="loading-row" class="hidden">
+                                    <td colspan="6" class="text-center py-4">
+                                        <div class="flex items-center justify-center gap-1">
+                                            <div class="w-2 h-2 bg-primary-500 rounded-full animate-bounce"></div>
+                                            <div class="w-2 h-2 bg-primary-500 rounded-full animate-bounce200"></div>
+                                            <div class="w-2 h-2 bg-primary-500 rounded-full animate-bounce400"></div>
+                                            <span class="ml-2">Carregando produtos...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr id="no-products-row" style="display: none;">
+                                    <td colspan="5" class="p-4 text-center">
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">Nenhum produto cadastrado</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mensagens -->
+    <div id="messageContainer" class="fixed top-4 right-4 z-50"></div>
+
+    <script>
+        // Função para verificar autenticação
+        async function checkAuth() {
+            try {
+                // Aguarda a inicialização do Supabase
+                if (!window.db) {
+                    console.log('Aguardando inicialização do Supabase...');
+                    await initSupabase();
+                }
+                
+                // Verifica a sessão do usuário
+                const session = await window.db.auth.checkSession();
+                
+                if (!session) {
+                    console.log('Usuário não autenticado, redirecionando...');
+                    window.location.href = 'login.html';
+                    return null;
+                }
+                
+                console.log('Usuário autenticado:', session.user);
+                return session.user;
+            } catch (error) {
+                console.error('Erro ao verificar autenticação:', error);
+                window.location.href = 'login.html';
+                return null;
+            }
+        }
+
+        // Inicialização da página
+        async function initializePage() {
+            try {
+                // Verifica autenticação
+                const user = await checkAuth();
+                if (!user) {
+                    return; // O redirecionamento já foi feito em checkAuth
+                }
+
+                // Inicializa o banco de dados
+                await initializeDatabase();
+                
+                // Carrega as categorias
+                await loadCategorias();
+                
+                // Carrega os produtos
+                await loadProdutos();
+                
+                // Configura os event listeners
+                setupEventListeners();
+                
+            } catch (error) {
+                console.error('Erro ao inicializar página:', error);
+                showMessage('Erro ao inicializar página: ' + error.message, 'error');
+            }
+        }
+        
+        // Função para mostrar mensagens
+        function showMessage(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg text-white transform transition-all duration-300 translate-y-full`;
+            
+            switch (type) {
+                case 'success':
+                    toast.classList.add('bg-green-500');
+                    break;
+                case 'error':
+                    toast.classList.add('bg-red-500');
+                    break;
+                default:
+                    toast.classList.add('bg-blue-500');
+            }
+            
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            // Força um reflow para que a animação funcione
+            toast.offsetHeight;
+            
+            // Mostra o toast
+            toast.classList.remove('translate-y-full');
+            
+            // Remove o toast após 3 segundos
+            setTimeout(() => {
+                toast.classList.add('translate-y-full');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        
+        // Configurar modo escuro
+        function setupDarkMode() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const html = document.documentElement;
+            
+            if (localStorage.getItem('darkMode') === 'true' || 
+                (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                html.classList.add('dark');
+            }
+            
+            darkModeToggle.addEventListener('click', () => {
+                html.classList.toggle('dark');
+                localStorage.setItem('darkMode', html.classList.contains('dark'));
+            });
+        }
+        
+        // Carregar categorias
+        async function loadCategorias() {
+            try {
+                const categorias = await window.db.categorias.listar();
+                
+                // Preencher select de categorias no formulário
+                const categoriaSelect = document.getElementById('categoria');
+                const filtroCategoriaSelect = document.getElementById('filtroCategoria');
+                
+                let optionsHtml = '<option value="">Selecione uma categoria</option>';
+                let filtroOptionsHtml = '<option value="">Todas as categorias</option>';
+                
+                categorias.forEach(cat => {
+                    optionsHtml += `<option value="${cat.id}">${cat.nome}</option>`;
+                    filtroOptionsHtml += `<option value="${cat.id}">${cat.nome}</option>`;
+                });
+                
+                categoriaSelect.innerHTML = optionsHtml;
+                filtroCategoriaSelect.innerHTML = filtroOptionsHtml;
+                
+            } catch (error) {
+                showMessage('Erro ao carregar categorias: ' + error.message, 'error');
+                console.error(error);
+            }
+        }
+        
+        // Função para carregar produtos
+        async function loadProdutos() {
+            const loadingRow = document.getElementById('loading-row');
+            const tbody = document.querySelector('tbody');
+            
+            // Limpa a tabela e mostra o loading
+            tbody.querySelectorAll('tr:not(#loading-row)').forEach(tr => tr.remove());
+            loadingRow.classList.remove('hidden');
+            
+            try {
+                const produtos = await window.db.produtos.listar();
+                
+                // Esconde o loading
+                loadingRow.classList.add('hidden');
+                
+                if (produtos.length === 0) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td colspan="6" class="text-center py-4 text-gray-500 dark:text-gray-400">
+                            Nenhum produto cadastrado
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                    return;
+                }
+                
+                produtos.forEach(produto => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-gray-50 dark:hover:bg-gray-800';
+                    tr.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="h-10 w-10 flex-shrink-0">
+                                    <img class="h-10 w-10 rounded-full object-cover" 
+                                         src="${produto.imagem_url || '/images/no-image.svg'}" 
+                                         alt="${produto.nome}">
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                        ${produto.nome}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900 dark:text-white">${produto.categoria}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900 dark:text-white">
+                                R$ ${parseFloat(produto.preco).toFixed(2)}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${produto.disponivel ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                ${produto.disponivel ? 'Disponível' : 'Indisponível'}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button onclick="editarProduto(${produto.id})" 
+                                    class="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300 mr-3">
+                                Editar
+                            </button>
+                            <button onclick="excluirProduto(${produto.id})" 
+                                    class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                                Excluir
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar produtos:', error);
+                loadingRow.classList.add('hidden');
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td colspan="6" class="text-center py-4 text-red-500">
+                        Erro ao carregar produtos. Por favor, tente novamente.
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+        
+        // Função para editar produto
+        async function editarProduto(id) {
+            try {
+                const produto = await window.db.produtos.buscar(id);
+                if (!produto) {
+                    showMessage('Produto não encontrado', 'error');
+                    return;
+                }
+                
+                const form = document.getElementById('produtoForm');
+                form.dataset.produtoId = id;
+                
+                form.elements.nome.value = produto.nome;
+                form.elements.categoria.value = produto.categoria;
+                form.elements.preco.value = produto.preco;
+                form.elements.descricao.value = produto.descricao;
+                form.elements.disponivel.value = produto.disponivel;
+                
+                // Atualiza o preview da imagem
+                const imagePreview = document.getElementById('imagePreview');
+                const imagePreviewContainer = document.getElementById('previewContainer');
+                
+                if (produto.imagem_url) {
+                    imagePreview.src = produto.imagem_url;
+                    imagePreviewContainer.classList.remove('hidden');
+                } else {
+                    imagePreview.src = '';
+                    imagePreviewContainer.classList.add('hidden');
+                }
+                
+                // Atualiza o título e botão do formulário
+                document.getElementById('formTitle').textContent = 'Editar Produto';
+                document.getElementById('buttonText').textContent = 'Salvar Alterações';
+                
+                // Scroll suave até o formulário
+                form.scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                console.error('Erro ao editar produto:', error);
+                showMessage('Erro ao editar produto: ' + error.message, 'error');
+            }
+        }
+        
+        // Função para excluir produto
+        async function excluirProduto(id) {
+            if (!confirm('Tem certeza que deseja excluir este produto?')) {
+                return;
+            }
+            
+            try {
+                await window.db.produtos.excluir(id);
+                showMessage('Produto excluído com sucesso!', 'success');
+                await loadProdutos();
+            } catch (error) {
+                console.error('Erro ao excluir produto:', error);
+                showMessage('Erro ao excluir produto: ' + error.message, 'error');
+            }
+        }
+        
+        // Configurar todos os event listeners
+        function setupEventListeners() {
+            // Form de produto
+            const form = document.getElementById('produtoForm');
+            form.addEventListener('submit', handleFormSubmit);
+            
+            // Preview de imagem
+            const imageInput = document.getElementById('imagem');
+            const imagePreview = document.getElementById('imagePreview');
+            const imagePreviewContainer = document.getElementById('previewContainer');
+            
+            imageInput.addEventListener('change', () => {
+                const file = imageInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        imagePreview.src = e.target.result;
+                        imagePreviewContainer.classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    imagePreview.src = '';
+                    imagePreviewContainer.classList.add('hidden');
+                }
+            });
+            
+            // Filtro de categoria
+            document.getElementById('filtroCategoria').addEventListener('change', loadProdutos);
+            
+            // Botão de recarregar
+            document.getElementById('recarregarBtn').addEventListener('click', loadProdutos);
+            
+            // Migração
+            document.getElementById('migrarDados').addEventListener('click', migrarDados);
+        }
+        
+        // Manipular envio do formulário
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.innerHTML;
+            
+            try {
+                submitButton.disabled = true;
+                submitButton.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="animate-spin -ml-1 mr-3 h-5 w-5 text-white">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </div>
+                        Salvando...
+                    </div>
+                `;
+                
+                const formData = new FormData(form);
+                const produto = {
+                    nome: formData.get('nome'),
+                    categoria: formData.get('categoria'),
+                    preco: parseFloat(formData.get('preco')),
+                    descricao: formData.get('descricao'),
+                    disponivel: formData.get('disponivel') === 'true',
+                    imagem: formData.get('imagem')
+                };
+                
+                const produtoId = form.dataset.produtoId;
+                
+                if (produtoId) {
+                    await window.db.produtos.atualizar(produtoId, produto);
+                    showMessage('Produto atualizado com sucesso!', 'success');
+                } else {
+                    await window.db.produtos.criar(produto);
+                    showMessage('Produto criado com sucesso!', 'success');
+                }
+                
+                // Limpa o formulário
+                form.reset();
+                form.removeAttribute('data-produto-id');
+                document.getElementById('previewContainer').classList.add('hidden');
+                document.getElementById('formTitle').textContent = 'Adicionar Produto';
+                submitButton.textContent = 'Adicionar Produto';
+                
+                // Recarrega a lista de produtos
+                await loadProdutos();
+                
+            } catch (error) {
+                console.error('Erro ao salvar produto:', error);
+                showMessage('Erro ao salvar produto: ' + error.message, 'error');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalButtonText;
+            }
+        }
+        
+        // Migrar dados da galeria para o banco
+        async function migrarDados() {
+            if (!confirm('Esta ação irá transferir as imagens da galeria atual para o banco de dados. Continuar?')) return;
+            
+            try {
+                showMessage('Iniciando migração de dados...', 'info');
+                
+                // Garantir que o banco de dados está inicializado
+                if (!window.db) {
+                    await window.initializeDatabase();
+                }
+                
+                const resultado = await window.db.migracao.migrarGaleria();
+                
+                if (resultado.success) {
+                    showMessage(resultado.message, 'success');
+                    loadProdutos();
+                } else {
+                    throw new Error(resultado.message);
+                }
+                
+            } catch (error) {
+                showMessage('Erro na migração: ' + error.message, 'error');
+                console.error(error);
+            }
+        }
+
+        async function logout() {
+            try {
+                await window.db.auth.logout();
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Erro ao fazer logout:', error);
+                alert('Erro ao fazer logout. Por favor, tente novamente.');
+            }
+        }
+
+        // Inicializa a página quando o DOM estiver pronto
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html> 
